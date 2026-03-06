@@ -126,4 +126,4 @@ Your code reads like a declaration of intent. The compiler turns it into a serve
 
 ## License
 
-MIT OR Apache-2.0
+MIT

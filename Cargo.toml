@@ -3,4 +3,11 @@ name = "stand-in"
 version = "0.0.1"
 edition = "2024"
 
+description = "A stand-in for your MCP server boilerplate."
+keywords = ["mcp", "ai", "llm", "agent", "server"]
+categories = ["web-programming::websocket", "web-programming::http-server", "artificial-intelligence"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/franciscotbjr/stand-in"
+
 [dependencies]
