@@ -6,7 +6,7 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-03-11
+- **Last Updated:** 2026-03-12
 - **Current Status:** Active development
 
 ## Active Work
@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 002 | CI/CD Setup | chore | 2026-03-12 |
 | 001 | Project Setup | chore | 2026-03-11 |
 
 ## Key Decisions
@@ -31,6 +32,7 @@
 - **Transport strategy** — Both Stdio and Streamable HTTP via feature flags
 - **Schema inference** — `#[mcp_tool]` macro infers JSON Schema from Rust function signatures
 - **Error handling** — Custom Error enum with `{Type}Error` suffix convention
+- **CI/CD** — GitHub Actions for build (push/PR) and publish (version tags)
 
 ## Constraints & Reminders
 
@@ -49,6 +51,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 002 | CI/CD Setup | chore | done | `history/002-ci-cd-setup.md` |
 | 001 | Project Setup | chore | done | `history/001-project-setup.md` |
 
 ## How to Use This File
