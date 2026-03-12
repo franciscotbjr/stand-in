@@ -1,0 +1,31 @@
+[package]
+name = "stand-in"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+description = "A stand-in for your MCP server boilerplate."
+readme = "../README.md"
+
+[dependencies]
+stand-in-macros.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+
+# HTTP transport (optional)
+axum = { workspace = true, optional = true }
+tower-http = { workspace = true, optional = true }
+tokio-stream = { workspace = true, optional = true }
+uuid = { workspace = true, optional = true }
+
+[features]
+default = ["stdio"]
+stdio = []
+http = ["dep:axum", "dep:tower-http", "dep:tokio-stream", "dep:uuid"]
