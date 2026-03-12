@@ -4,6 +4,33 @@
 
 You write with `stand-in`  declarative macros that look like your MCP server — tools, resources, prompts — but when the compiler rolls, the macros step aside and production-ready code takes their place. You never touch the generated code. You only ever interact with the stand-in.
 
+## Status
+
+🚧 **Work in Progress** — The project structure is set up, but macros are not yet implemented.
+
+## Installation
+
+Add to your `Cargo.toml`:
+
+```toml
+[dependencies]
+stand-in = "0.0.1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+```
+
+### Feature Flags
+
+| Feature | Default | Description |
+|---------|---------|-------------|
+| `stdio` | ✅ | Stdio transport for local/CLI usage |
+| `http` | ❌ | Streamable HTTP transport (MCP spec 2025-03-26) |
+
+To enable HTTP transport:
+
+```toml
+stand-in = { version = "0.0.1", features = ["http"] }
+```
+
 ## Quick Start
 
 ```rust
@@ -64,7 +91,7 @@ stand-in/
 - **`#[mcp_resource]`** — Expose a resource with URI templates. Supports static and dynamic content.
 - **`#[mcp_prompt]`** — Define reusable prompt templates with typed arguments.
 - **`#[mcp_server]`** — Wire everything together. Generates initialization, capability negotiation, and dispatch.
-- **Transports** — Stdio and SSE built-in. Extensible via the `Transport` trait.
+- **Transports** — Stdio (default) and Streamable HTTP (feature-gated). Extensible via the `Transport` trait.
 - **Async-first** — Built on `tokio`. Every handler is `async fn`.
 
 ## Example: A More Complete Server

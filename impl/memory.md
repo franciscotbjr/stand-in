@@ -13,7 +13,7 @@
 
 > What is currently in progress? Reference the iteration file.
 
-- [ ] Initial project setup → `history/001-project-setup.md`
+- None — ready for first feature
 
 ## Recent Completions
 
@@ -21,7 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
-| — | — | — | — |
+| 001 | Project Setup | chore | 2026-03-11 |
 
 ## Key Decisions
 
@@ -49,7 +49,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
-| 001 | Project Setup | chore | in-progress | `history/001-project-setup.md` |
+| 001 | Project Setup | chore | done | `history/001-project-setup.md` |
 
 ## How to Use This File
 
