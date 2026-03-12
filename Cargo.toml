@@ -1,13 +1,42 @@
-[package]
-name = "stand-in"
+[workspace]
+members = ["stand-in", "stand-in-macros"]
+resolver = "2"
+
+[workspace.package]
 version = "0.0.1"
 edition = "2024"
-
-description = "A stand-in for your MCP server boilerplate."
+license = "MIT"
+repository = "https://github.com/franciscotbjr/stand-in"
 keywords = ["mcp", "ai", "llm", "agent", "server"]
 categories = ["web-programming::websocket", "web-programming::http-server", "artificial-intelligence"]
-license = "MIT"
-readme = "README.md"
-repository = "https://github.com/franciscotbjr/stand-in"
 
-[dependencies]
+[workspace.dependencies]
+# Runtime
+tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util"] }
+tokio-stream = "0.1.18"
+
+# Serialization
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+
+# Error handling
+thiserror = "2.0.18"
+
+# Async
+async-trait = "0.1.89"
+
+# Logging
+tracing = "0.1.44"
+
+# HTTP transport (feature-gated)
+axum = "0.8.8"
+tower-http = { version = "0.6.8", features = ["cors"] }
+uuid = { version = "1.22.0", features = ["v4"] }
+
+# Proc macro tooling
+syn = { version = "2.0.117", features = ["full", "parsing", "extra-traits"] }
+quote = "1.0.45"
+proc-macro2 = "1.0.106"
+
+# Internal
+stand-in-macros = { path = "stand-in-macros" }
