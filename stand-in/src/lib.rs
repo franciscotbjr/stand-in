@@ -47,6 +47,8 @@ pub mod prelude {
         CallToolParams, CallToolResult, Content, InputSchema, ListToolsResult, McpTool,
         ToolDefinition, ToolRegistry,
     };
+    #[cfg(feature = "http")]
+    pub use crate::transport::HttpTransport;
     #[cfg(feature = "stdio")]
     pub use crate::transport::StdioTransport;
     pub use crate::transport::Transport;

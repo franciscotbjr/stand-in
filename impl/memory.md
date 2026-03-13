@@ -6,7 +6,7 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-03-12
+- **Last Updated:** 2026-03-13
 - **Current Status:** Active development
 
 ## Active Work
@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 004 | Streamable HTTP | feature | 2026-03-13 |
 | 003 | Stdio Server | feature | 2026-03-12 |
 | 002 | CI/CD Setup | chore | 2026-03-12 |
 | 001 | Project Setup | chore | 2026-03-11 |
@@ -54,6 +55,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 004 | Streamable HTTP | feature | done | `history/004-streamable-http.md` |
 | 003 | Stdio Server | feature | done | `history/003-stdio-server.md` |
 | 002 | CI/CD Setup | chore | done | `history/002-ci-cd-setup.md` |
 | 001 | Project Setup | chore | done | `history/001-project-setup.md` |

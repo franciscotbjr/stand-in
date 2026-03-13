@@ -13,7 +13,7 @@ categories = ["web-programming::websocket", "web-programming::http-server", "art
 [workspace.dependencies]
 # Runtime
 tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util", "io-std"] }
-tokio-stream = "0.1.18"
+tokio-stream = { version = "0.1.18", features = ["sync"] }
 
 # Serialization
 serde = { version = "1.0.228", features = ["derive"] }
@@ -40,6 +40,9 @@ proc-macro2 = "1.0.106"
 
 # Tool discovery
 inventory = "0.3"
+
+# Testing
+reqwest = { version = "0.12", features = ["json"] }
 
 # Internal
 stand-in-macros = { path = "stand-in-macros" }
