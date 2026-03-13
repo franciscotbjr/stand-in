@@ -8,6 +8,9 @@
 
 use proc_macro::TokenStream;
 
+mod mcp_tool;
+mod schema;
+
 /// Marks a struct as an MCP server.
 ///
 /// Generates initialization, capability negotiation, and dispatch logic.
@@ -41,9 +44,8 @@ pub fn mcp_server(_attr: TokenStream, item: TokenStream) -> TokenStream {
 /// }
 /// ```
 #[proc_macro_attribute]
-pub fn mcp_tool(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    // TODO: Implement tool macro
-    item
+pub fn mcp_tool(attr: TokenStream, item: TokenStream) -> TokenStream {
+    mcp_tool::expand(attr.into(), item.into()).into()
 }
 
 /// Marks an async function as an MCP resource.

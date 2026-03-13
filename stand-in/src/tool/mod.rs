@@ -6,6 +6,7 @@ mod content;
 mod input_schema;
 mod list_tools_result;
 mod tool_definition;
+mod tool_factory;
 mod tool_registry;
 mod tool_trait;
 
@@ -15,5 +16,6 @@ pub use content::Content;
 pub use input_schema::InputSchema;
 pub use list_tools_result::ListToolsResult;
 pub use tool_definition::ToolDefinition;
+pub use tool_factory::ToolFactory;
 pub use tool_registry::ToolRegistry;
 pub use tool_trait::McpTool;
