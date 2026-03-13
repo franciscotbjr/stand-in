@@ -34,7 +34,7 @@ struct ReferenceServer;
 
 #[tokio::main]
 async fn main() {
-    ReferenceServer::serve(StdioTransport::default())
+    ReferenceServer::serve(StdioTransport)
         .await
         .unwrap();
 }

@@ -22,5 +22,5 @@ struct HelloServer;
 
 #[tokio::main]
 async fn main() {
-    HelloServer::serve(StdioTransport::default()).await.unwrap();
+    HelloServer::serve(StdioTransport).await.unwrap();
 }
