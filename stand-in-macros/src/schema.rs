@@ -20,19 +20,17 @@ pub fn type_to_schema(ty: &Type) -> (TokenStream, bool) {
 
             match ident.as_str() {
                 "String" | "str" => (quote! { serde_json::json!({"type": "string"}) }, true),
-                "i8" | "i16" | "i32" | "i64" | "i128" | "isize" | "u8" | "u16" | "u32"
-                | "u64" | "u128" | "usize" => {
-                    (quote! { serde_json::json!({"type": "integer"}) }, true)
-                }
+                "i8" | "i16" | "i32" | "i64" | "i128" | "isize" | "u8" | "u16" | "u32" | "u64"
+                | "u128" | "usize" => (quote! { serde_json::json!({"type": "integer"}) }, true),
                 "f32" | "f64" => (quote! { serde_json::json!({"type": "number"}) }, true),
                 "bool" => (quote! { serde_json::json!({"type": "boolean"}) }, true),
                 "Option" => {
                     // Extract inner type from Option<T>
-                    if let syn::PathArguments::AngleBracketed(args) = &segment.arguments {
-                        if let Some(syn::GenericArgument::Type(inner_ty)) = args.args.first() {
-                            let (inner_schema, _) = type_to_schema(inner_ty);
-                            return (inner_schema, false);
-                        }
+                    if let syn::PathArguments::AngleBracketed(args) = &segment.arguments
+                        && let Some(syn::GenericArgument::Type(inner_ty)) = args.args.first()
+                    {
+                        let (inner_schema, _) = type_to_schema(inner_ty);
+                        return (inner_schema, false);
                     }
                     (quote! { serde_json::json!({"type": "string"}) }, false)
                 }

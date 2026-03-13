@@ -2,7 +2,7 @@
 
 use proc_macro2::TokenStream;
 use quote::quote;
-use syn::{parse2, ItemStruct};
+use syn::{ItemStruct, parse2};
 
 /// Main expansion entry point for `#[mcp_server]`.
 pub fn expand(_attr: TokenStream, item: TokenStream) -> TokenStream {

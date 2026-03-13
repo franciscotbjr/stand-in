@@ -3,7 +3,7 @@
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use syn::parse::Parser;
-use syn::{parse2, FnArg, ItemFn, Lit, Meta, Pat, PatType};
+use syn::{FnArg, ItemFn, Lit, Meta, Pat, PatType, parse2};
 
 use crate::schema::type_to_schema;
 
@@ -28,13 +28,13 @@ impl ToolAttrs {
                     .get_ident()
                     .map(|i| i.to_string())
                     .unwrap_or_default();
-                if let syn::Expr::Lit(expr_lit) = &nv.value {
-                    if let Lit::Str(lit_str) = &expr_lit.lit {
-                        match key.as_str() {
-                            "name" => name = Some(lit_str.value()),
-                            "description" => description = Some(lit_str.value()),
-                            _ => {}
-                        }
+                if let syn::Expr::Lit(expr_lit) = &nv.value
+                    && let Lit::Str(lit_str) = &expr_lit.lit
+                {
+                    match key.as_str() {
+                        "name" => name = Some(lit_str.value()),
+                        "description" => description = Some(lit_str.value()),
+                        _ => {}
                     }
                 }
             }
@@ -67,10 +67,7 @@ fn expand_inner(attr: TokenStream, item: TokenStream) -> syn::Result<TokenStream
     let func: ItemFn = parse2(item)?;
 
     let func_name = &func.sig.ident;
-    let struct_name = format_ident!(
-        "{}Tool",
-        to_pascal_case(&func_name.to_string())
-    );
+    let struct_name = format_ident!("{}Tool", to_pascal_case(&func_name.to_string()));
     let tool_name = &attrs.name;
     let tool_description = &attrs.description;
 
@@ -81,21 +78,21 @@ fn expand_inner(attr: TokenStream, item: TokenStream) -> syn::Result<TokenStream
     let mut required_names: Vec<String> = Vec::new();
 
     for arg in &func.sig.inputs {
-        if let FnArg::Typed(PatType { pat, ty, .. }) = arg {
-            if let Pat::Ident(pat_ident) = pat.as_ref() {
-                let name = &pat_ident.ident;
-                let name_str = name.to_string();
-                let (schema_tokens, is_required) = type_to_schema(ty);
+        if let FnArg::Typed(PatType { pat, ty, .. }) = arg
+            && let Pat::Ident(pat_ident) = pat.as_ref()
+        {
+            let name = &pat_ident.ident;
+            let name_str = name.to_string();
+            let (schema_tokens, is_required) = type_to_schema(ty);
 
-                param_names.push(name.clone());
-                param_types.push(*ty.clone());
-                property_tokens.push(quote! {
-                    properties.insert(#name_str.to_string(), #schema_tokens);
-                });
+            param_names.push(name.clone());
+            param_types.push(*ty.clone());
+            property_tokens.push(quote! {
+                properties.insert(#name_str.to_string(), #schema_tokens);
+            });
 
-                if is_required {
-                    required_names.push(name_str);
-                }
+            if is_required {
+                required_names.push(name_str);
             }
         }
     }

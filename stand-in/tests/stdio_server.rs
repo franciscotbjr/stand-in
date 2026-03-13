@@ -98,10 +98,7 @@ fn test_full_lifecycle() {
 fn test_unknown_method_error() {
     let mut child = spawn_server();
 
-    let resp = send_and_receive(
-        &mut child,
-        r#"{"jsonrpc":"2.0","id":1,"method":"foo/bar"}"#,
-    );
+    let resp = send_and_receive(&mut child, r#"{"jsonrpc":"2.0","id":1,"method":"foo/bar"}"#);
     let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
     assert_eq!(json["error"]["code"], -32601);
 

@@ -5,9 +5,7 @@ use tracing::info;
 use crate::protocol::{JsonRpcError, JsonRpcRequest, JsonRpcResponse};
 use crate::tool::{CallToolParams, ToolRegistry};
 
-use super::{
-    InitializeResult, ServerCapabilities, ServerInfo, ToolsCapability,
-};
+use super::{InitializeResult, ServerCapabilities, ServerInfo, ToolsCapability};
 
 /// Dispatches incoming JSON-RPC requests to the appropriate handler.
 #[derive(Debug)]
@@ -41,10 +39,7 @@ impl RequestHandler {
             "tools/call" => self.handle_tools_call(id, &request.params).await,
             method => {
                 info!(method, "Unknown method requested");
-                JsonRpcResponse::error(
-                    id,
-                    JsonRpcError::method_not_found(method),
-                )
+                JsonRpcResponse::error(id, JsonRpcError::method_not_found(method))
             }
         }
     }
@@ -52,8 +47,7 @@ impl RequestHandler {
     fn handle_initialize(&self, id: serde_json::Value) -> JsonRpcResponse {
         let result = InitializeResult {
             protocol_version: "2025-03-26".to_string(),
-            capabilities: ServerCapabilities::new()
-                .with_tools(ToolsCapability::default()),
+            capabilities: ServerCapabilities::new().with_tools(ToolsCapability::default()),
             server_info: self.server_info.clone(),
         };
 
@@ -84,10 +78,7 @@ impl RequestHandler {
         let call_params: CallToolParams = match serde_json::from_value(params.clone()) {
             Ok(p) => p,
             Err(e) => {
-                return JsonRpcResponse::error(
-                    id,
-                    JsonRpcError::invalid_params(e.to_string()),
-                );
+                return JsonRpcResponse::error(id, JsonRpcError::invalid_params(e.to_string()));
             }
         };
 
@@ -96,9 +87,7 @@ impl RequestHandler {
             .call_tool(&call_params.name, call_params.arguments)
             .await
         {
-            Ok(result) => {
-                JsonRpcResponse::success(id, serde_json::to_value(result).unwrap())
-            }
+            Ok(result) => JsonRpcResponse::success(id, serde_json::to_value(result).unwrap()),
             Err(e) => {
                 let error_result = crate::tool::CallToolResult::error(e.to_string());
                 JsonRpcResponse::success(id, serde_json::to_value(error_result).unwrap())
@@ -151,7 +140,11 @@ mod tests {
         RequestHandler::new(registry, server_info)
     }
 
-    fn make_request(method: &str, id: serde_json::Value, params: Option<serde_json::Value>) -> JsonRpcRequest {
+    fn make_request(
+        method: &str,
+        id: serde_json::Value,
+        params: Option<serde_json::Value>,
+    ) -> JsonRpcRequest {
         JsonRpcRequest {
             jsonrpc: "2.0".to_string(),
             id: Some(id),
@@ -163,11 +156,15 @@ mod tests {
     #[tokio::test]
     async fn test_handle_initialize() {
         let handler = make_handler();
-        let req = make_request("initialize", serde_json::json!(1), Some(serde_json::json!({
-            "protocolVersion": "2025-03-26",
-            "capabilities": {},
-            "clientInfo": {"name": "test", "version": "1.0.0"}
-        })));
+        let req = make_request(
+            "initialize",
+            serde_json::json!(1),
+            Some(serde_json::json!({
+                "protocolVersion": "2025-03-26",
+                "capabilities": {},
+                "clientInfo": {"name": "test", "version": "1.0.0"}
+            })),
+        );
         let resp = handler.handle(&req).await;
         assert!(resp.error.is_none());
         let result = resp.result.unwrap();
@@ -188,10 +185,14 @@ mod tests {
     #[tokio::test]
     async fn test_handle_tools_call() {
         let handler = make_handler();
-        let req = make_request("tools/call", serde_json::json!(3), Some(serde_json::json!({
-            "name": "echo",
-            "arguments": {"message": "hello"}
-        })));
+        let req = make_request(
+            "tools/call",
+            serde_json::json!(3),
+            Some(serde_json::json!({
+                "name": "echo",
+                "arguments": {"message": "hello"}
+            })),
+        );
         let resp = handler.handle(&req).await;
         assert!(resp.error.is_none());
         let result = resp.result.unwrap();

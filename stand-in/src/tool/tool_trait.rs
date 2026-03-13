@@ -25,9 +25,8 @@ pub trait McpTool: Send + Sync + std::fmt::Debug {
         ToolDefinition {
             name: self.name().to_string(),
             description: self.description().to_string(),
-            input_schema: serde_json::from_value(self.input_schema()).unwrap_or_else(|_| {
-                InputSchema::object()
-            }),
+            input_schema: serde_json::from_value(self.input_schema())
+                .unwrap_or_else(|_| InputSchema::object()),
         }
     }
 }
@@ -72,9 +71,6 @@ mod tests {
         assert_eq!(def.description, "A dummy tool");
         assert_eq!(def.input_schema.schema_type, "object");
         assert!(def.input_schema.properties.is_some());
-        assert_eq!(
-            def.input_schema.required,
-            Some(vec!["msg".to_string()])
-        );
+        assert_eq!(def.input_schema.required, Some(vec!["msg".to_string()]));
     }
 }

@@ -50,10 +50,8 @@ mod tests {
 
     #[test]
     fn test_success_response() {
-        let resp = JsonRpcResponse::success(
-            serde_json::json!(1),
-            serde_json::json!({"status": "ok"}),
-        );
+        let resp =
+            JsonRpcResponse::success(serde_json::json!(1), serde_json::json!({"status": "ok"}));
         assert_eq!(resp.jsonrpc, "2.0");
         assert_eq!(resp.id, serde_json::json!(1));
         assert!(resp.result.is_some());
@@ -75,10 +73,8 @@ mod tests {
 
     #[test]
     fn test_response_round_trip() {
-        let resp = JsonRpcResponse::success(
-            serde_json::json!(42),
-            serde_json::json!({"tools": []}),
-        );
+        let resp =
+            JsonRpcResponse::success(serde_json::json!(42), serde_json::json!({"tools": []}));
         let json = serde_json::to_string(&resp).unwrap();
         let deserialized: JsonRpcResponse = serde_json::from_str(&json).unwrap();
         assert_eq!(resp, deserialized);

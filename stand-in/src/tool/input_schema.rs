@@ -65,8 +65,8 @@ mod tests {
 
     #[test]
     fn test_with_required() {
-        let schema = InputSchema::object()
-            .with_required(vec!["name".to_string(), "age".to_string()]);
+        let schema =
+            InputSchema::object().with_required(vec!["name".to_string(), "age".to_string()]);
         assert_eq!(
             schema.required,
             Some(vec!["name".to_string(), "age".to_string()])
