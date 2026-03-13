@@ -8,6 +8,7 @@
 
 use proc_macro::TokenStream;
 
+mod mcp_server;
 mod mcp_tool;
 mod schema;
 
@@ -22,9 +23,8 @@ mod schema;
 /// struct MyServer;
 /// ```
 #[proc_macro_attribute]
-pub fn mcp_server(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    // TODO: Implement server macro
-    item
+pub fn mcp_server(attr: TokenStream, item: TokenStream) -> TokenStream {
+    mcp_server::expand(attr.into(), item.into()).into()
 }
 
 /// Marks an async function as an MCP tool.
