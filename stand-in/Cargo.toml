@@ -31,5 +31,9 @@ default = ["stdio"]
 stdio = []
 http = ["dep:axum", "dep:tower-http", "dep:tokio-stream", "dep:uuid"]
 
+[[example]]
+name = "http_server"
+required-features = ["http"]
+
 [dev-dependencies]
 reqwest.workspace = true
