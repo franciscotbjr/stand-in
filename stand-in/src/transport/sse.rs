@@ -10,6 +10,7 @@ use crate::protocol::JsonRpcResponse;
 ///
 /// The event data is the JSON-serialized response. The event type
 /// is set to `"message"` per the MCP specification.
+#[allow(dead_code)]
 pub fn response_to_event(response: &JsonRpcResponse) -> Result<Event, serde_json::Error> {
     let json = serde_json::to_string(response)?;
     Ok(Event::default().event("message").data(json))

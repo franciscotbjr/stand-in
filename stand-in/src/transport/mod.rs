@@ -11,11 +11,13 @@ mod stdio;
 pub use stdio::StdioTransport;
 
 #[cfg(feature = "http")]
-#[allow(dead_code)]
+mod http_transport;
+#[cfg(feature = "http")]
 pub(crate) mod session;
 #[cfg(feature = "http")]
-#[allow(dead_code)]
 pub(crate) mod session_store;
 #[cfg(feature = "http")]
-#[allow(dead_code)]
 pub(crate) mod sse;
+
+#[cfg(feature = "http")]
+pub use http_transport::HttpTransport;

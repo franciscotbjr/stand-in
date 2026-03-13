@@ -9,6 +9,7 @@ use tokio::sync::broadcast;
 #[derive(Debug)]
 pub struct Session {
     /// Unique session identifier (UUID v4).
+    #[allow(dead_code)]
     id: String,
 
     /// Broadcast sender for server-initiated notifications (SSE).
@@ -26,11 +27,13 @@ impl Session {
     }
 
     /// Return the session ID.
+    #[allow(dead_code)]
     pub fn id(&self) -> &str {
         &self.id
     }
 
     /// Return a clone of the notification broadcast sender.
+    #[allow(dead_code)]
     pub fn notification_tx(&self) -> broadcast::Sender<String> {
         self.notification_tx.clone()
     }
