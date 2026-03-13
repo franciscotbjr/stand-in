@@ -1,5 +1,5 @@
 [workspace]
-members = ["stand-in", "stand-in-macros"]
+members = ["stand-in", "stand-in-macros", "stand-in-reference"]
 resolver = "2"
 
 [workspace.package]
