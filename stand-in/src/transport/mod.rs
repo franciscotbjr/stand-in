@@ -9,3 +9,10 @@ mod stdio;
 
 #[cfg(feature = "stdio")]
 pub use stdio::StdioTransport;
+
+#[cfg(feature = "http")]
+#[allow(dead_code)]
+pub(crate) mod session;
+#[cfg(feature = "http")]
+#[allow(dead_code)]
+pub(crate) mod session_store;

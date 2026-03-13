@@ -6,14 +6,15 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-03-12
+- **Last Updated:** 2026-03-13
 - **Current Status:** Active development
 
 ## Active Work
 
 > What is currently in progress? Reference the iteration file.
 
-- None — ready for next feature
+- **Iteration 004 — Streamable HTTP Transport** (`history/004-streamable-http.md`)
+  - Phase 4 (Implement), Milestone 1: Session Types
 
 ## Recent Completions
 
@@ -54,6 +55,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 004 | Streamable HTTP | feature | in-progress | `history/004-streamable-http.md` |
 | 003 | Stdio Server | feature | done | `history/003-stdio-server.md` |
 | 002 | CI/CD Setup | chore | done | `history/002-ci-cd-setup.md` |
 | 001 | Project Setup | chore | done | `history/001-project-setup.md` |
