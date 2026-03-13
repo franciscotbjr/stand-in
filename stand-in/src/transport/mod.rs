@@ -16,3 +16,6 @@ pub(crate) mod session;
 #[cfg(feature = "http")]
 #[allow(dead_code)]
 pub(crate) mod session_store;
+#[cfg(feature = "http")]
+#[allow(dead_code)]
+pub(crate) mod sse;
