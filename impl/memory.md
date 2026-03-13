@@ -13,7 +13,7 @@
 
 > What is currently in progress? Reference the iteration file.
 
-- None — ready for first feature
+- **Iteration 003** — Stdio Server (in-progress). See `history/003-stdio-server.md`
 
 ## Recent Completions
 
@@ -51,6 +51,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 003 | Stdio Server | feature | in-progress | `history/003-stdio-server.md` |
 | 002 | CI/CD Setup | chore | done | `history/002-ci-cd-setup.md` |
 | 001 | Project Setup | chore | done | `history/001-project-setup.md` |
 

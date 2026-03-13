@@ -28,11 +28,15 @@
 //! ```
 
 pub mod error;
+pub mod protocol;
 
 pub use stand_in_macros::*;
 
 /// Prelude module — import everything you need with `use stand_in::prelude::*`.
 pub mod prelude {
     pub use crate::error::{Error, Result};
+    pub use crate::protocol::{
+        JsonRpcError, JsonRpcNotification, JsonRpcRequest, JsonRpcResponse,
+    };
     pub use stand_in_macros::*;
 }
