@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Streamable HTTP transport** (feature: `http`) — MCP 2025-03-26 spec
+  - `HttpTransport` struct with `POST/GET/DELETE /mcp` handlers
+  - Session management via `Mcp-Session-Id` header (`Session`, `SessionStore`)
+  - SSE notification stream on `GET /mcp`
+  - CORS support via `tower-http`
+  - Graceful shutdown on Ctrl+C
+  - `#[mcp_server(host = "...", port = N)]` macro attributes for HTTP config
+  - `serve_http()` convenience method (feature-gated)
+  - `examples/http_server.rs` — minimal HTTP server example
+  - 10 HTTP integration tests (full lifecycle, error cases)
 - Cargo workspace with two crates: `stand-in` (library) and `stand-in-macros` (proc macros)
 - Stub macros: `#[mcp_server]`, `#[mcp_tool]`, `#[mcp_resource]`, `#[mcp_prompt]`
 - Custom error types with `thiserror` (`Error` enum, `Result` alias)

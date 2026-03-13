@@ -13,8 +13,7 @@
 
 > What is currently in progress? Reference the iteration file.
 
-- **Iteration 004 — Streamable HTTP Transport** (`history/004-streamable-http.md`)
-  - Phase 4 (Implement), Milestone 1: Session Types
+- None — ready for next feature
 
 ## Recent Completions
 
@@ -22,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 004 | Streamable HTTP | feature | 2026-03-13 |
 | 003 | Stdio Server | feature | 2026-03-12 |
 | 002 | CI/CD Setup | chore | 2026-03-12 |
 | 001 | Project Setup | chore | 2026-03-11 |
@@ -55,7 +55,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
-| 004 | Streamable HTTP | feature | in-progress | `history/004-streamable-http.md` |
+| 004 | Streamable HTTP | feature | done | `history/004-streamable-http.md` |
 | 003 | Stdio Server | feature | done | `history/003-stdio-server.md` |
 | 002 | CI/CD Setup | chore | done | `history/002-ci-cd-setup.md` |
 | 001 | Project Setup | chore | done | `history/001-project-setup.md` |

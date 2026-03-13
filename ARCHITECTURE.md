@@ -33,7 +33,11 @@ stand-in/src/
 │   └── handler.rs      # RequestHandler (method dispatch)
 └── transport/          # Communication layer
     ├── transport_trait.rs # Transport trait
-    └── stdio.rs        # StdioTransport (feature-gated)
+    ├── stdio.rs        # StdioTransport (feature: stdio)
+    ├── http_transport.rs # HttpTransport + axum handlers (feature: http)
+    ├── session.rs      # Session struct (feature: http)
+    ├── session_store.rs # SessionStore (feature: http)
+    └── sse.rs          # SSE event helpers (feature: http)
 
 stand-in-macros/src/
 ├── lib.rs              # Proc macro entry points
@@ -73,7 +77,17 @@ stand-in-macros/src/
 
 ### Transport Abstraction
 
-**Decision:** The `Transport` trait abstracts communication. `StdioTransport` is the default (feature-gated under `stdio`). HTTP transport can be added later under the `http` feature flag without changing the core architecture.
+**Decision:** The `Transport` trait abstracts communication. Two implementations exist:
+- **`StdioTransport`** (feature: `stdio`, default) — line-delimited JSON-RPC over stdin/stdout
+- **`HttpTransport`** (feature: `http`) — MCP 2025-03-26 Streamable HTTP: POST/GET/DELETE on `/mcp`, session management via `Mcp-Session-Id` header, SSE for notifications, CORS via `tower-http`
+
+The `#[mcp_server]` macro generates both `serve(transport)` (generic) and `serve_http()` (convenience, feature-gated). Optional `host`/`port` attributes control the HTTP bind address: `#[mcp_server(host = "0.0.0.0", port = 8080)]`.
+
+### HTTP Session Management
+
+**Decision:** In-memory `SessionStore` using `Arc<RwLock<HashMap<String, Session>>>`. Sessions are created on successful `initialize`, validated on every subsequent request, and removed on `DELETE /mcp`. UUIDs generated via the `uuid` crate.
+
+**Rationale:** Simple, sufficient for single-process servers. Distributed session stores can be added later without changing the handler logic.
 
 ## Error Handling
 
