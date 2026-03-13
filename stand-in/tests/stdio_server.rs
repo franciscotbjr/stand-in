@@ -1,38 +1,46 @@
 //! Integration tests for the stdio MCP server.
 //!
-//! Spawns the `hello_server` example as a child process and communicates
+//! Spawns the `stand-in-reference` binary as a child process and communicates
 //! via stdin/stdout using line-delimited JSON-RPC.
 
 use std::io::{BufRead, BufReader, Write};
-use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::sync::Once;
 
-fn example_binary_path() -> PathBuf {
-    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+static BUILD: Once = Once::new();
+
+fn ensure_binary_built() {
+    BUILD.call_once(|| {
+        let status = Command::new(env!("CARGO"))
+            .args(["build", "-p", "stand-in-reference"])
+            .status()
+            .expect("Failed to run cargo build");
+        assert!(status.success(), "Failed to build stand-in-reference");
+    });
+}
+
+fn reference_binary_path() -> std::path::PathBuf {
+    let mut path = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     path.pop(); // go up from stand-in/ to workspace root
     path.push("target");
     path.push("debug");
-    path.push("examples");
     if cfg!(windows) {
-        path.push("hello_server.exe");
+        path.push("stand-in-reference.exe");
     } else {
-        path.push("hello_server");
+        path.push("stand-in-reference");
     }
     path
 }
 
 fn spawn_server() -> std::process::Child {
-    let binary = example_binary_path();
-    assert!(
-        binary.exists(),
-        "Example binary not found at {binary:?}. Run `cargo build --example hello_server` first."
-    );
+    ensure_binary_built();
+    let binary = reference_binary_path();
     Command::new(binary)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn()
-        .expect("Failed to spawn hello_server")
+        .expect("Failed to spawn stand-in-reference")
 }
 
 fn send_and_receive(child: &mut std::process::Child, request: &str) -> String {
@@ -77,8 +85,11 @@ fn test_full_lifecycle() {
     );
     let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
     let tools = json["result"]["tools"].as_array().unwrap();
-    assert!(!tools.is_empty());
-    assert_eq!(tools[0]["name"], "greet");
+    assert_eq!(tools.len(), 3);
+    let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
+    assert!(names.contains(&"greet"));
+    assert!(names.contains(&"add"));
+    assert!(names.contains(&"echo"));
 
     // 4. Tools call
     let resp = send_and_receive(
