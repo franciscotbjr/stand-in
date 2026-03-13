@@ -29,6 +29,7 @@
 
 pub mod error;
 pub mod protocol;
+pub mod server;
 pub mod tool;
 
 pub use stand_in_macros::*;
@@ -38,6 +39,10 @@ pub mod prelude {
     pub use crate::error::{Error, Result};
     pub use crate::protocol::{
         JsonRpcError, JsonRpcNotification, JsonRpcRequest, JsonRpcResponse,
+    };
+    pub use crate::server::{
+        ClientInfo, InitializeParams, InitializeResult, RequestHandler, ServerCapabilities,
+        ServerInfo, ToolsCapability,
     };
     pub use crate::tool::{
         CallToolParams, CallToolResult, Content, InputSchema, ListToolsResult, McpTool,
