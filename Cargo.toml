@@ -1,5 +1,5 @@
 [workspace]
-members = ["stand-in", "stand-in-macros"]
+members = ["stand-in", "stand-in-macros", "stand-in-reference"]
 resolver = "2"
 
 [workspace.package]
@@ -12,7 +12,7 @@ categories = ["web-programming::websocket", "web-programming::http-server", "art
 
 [workspace.dependencies]
 # Runtime
-tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util"] }
+tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util", "io-std"] }
 tokio-stream = "0.1.18"
 
 # Serialization
@@ -37,6 +37,9 @@ uuid = { version = "1.22.0", features = ["v4"] }
 syn = { version = "2.0.117", features = ["full", "parsing", "extra-traits"] }
 quote = "1.0.45"
 proc-macro2 = "1.0.106"
+
+# Tool discovery
+inventory = "0.3"
 
 # Internal
 stand-in-macros = { path = "stand-in-macros" }

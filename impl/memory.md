@@ -13,7 +13,7 @@
 
 > What is currently in progress? Reference the iteration file.
 
-- None — ready for first feature
+- None — ready for next feature
 
 ## Recent Completions
 
@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 003 | Stdio Server | feature | 2026-03-12 |
 | 002 | CI/CD Setup | chore | 2026-03-12 |
 | 001 | Project Setup | chore | 2026-03-11 |
 
@@ -33,6 +34,8 @@
 - **Schema inference** — `#[mcp_tool]` macro infers JSON Schema from Rust function signatures
 - **Error handling** — Custom Error enum with `{Type}Error` suffix convention
 - **CI/CD** — GitHub Actions for build (push/PR) and publish (version tags)
+- **Tool discovery** — `inventory` crate for zero-boilerplate auto-registration of `#[mcp_tool]` functions
+- **MCP protocol** — Version 2025-03-26, server identity auto-derived from Cargo.toml via `env!()`
 
 ## Constraints & Reminders
 
@@ -51,6 +54,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 003 | Stdio Server | feature | done | `history/003-stdio-server.md` |
 | 002 | CI/CD Setup | chore | done | `history/002-ci-cd-setup.md` |
 | 001 | Project Setup | chore | done | `history/001-project-setup.md` |
 
