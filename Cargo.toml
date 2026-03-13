@@ -12,7 +12,7 @@ categories = ["web-programming::websocket", "web-programming::http-server", "art
 
 [workspace.dependencies]
 # Runtime
-tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util"] }
+tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util", "io-std"] }
 tokio-stream = "0.1.18"
 
 # Serialization

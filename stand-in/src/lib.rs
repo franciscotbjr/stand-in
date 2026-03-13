@@ -31,6 +31,7 @@ pub mod error;
 pub mod protocol;
 pub mod server;
 pub mod tool;
+pub mod transport;
 
 pub use stand_in_macros::*;
 
@@ -48,5 +49,8 @@ pub mod prelude {
         CallToolParams, CallToolResult, Content, InputSchema, ListToolsResult, McpTool,
         ToolDefinition, ToolRegistry,
     };
+    pub use crate::transport::Transport;
+    #[cfg(feature = "stdio")]
+    pub use crate::transport::StdioTransport;
     pub use stand_in_macros::*;
 }
