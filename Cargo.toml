@@ -27,6 +27,7 @@ async-trait = "0.1.89"
 
 # Logging
 tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 
 # HTTP transport (feature-gated)
 axum = "0.8.8"

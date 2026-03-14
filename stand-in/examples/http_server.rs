@@ -1,6 +1,9 @@
 //! A minimal MCP server over HTTP that exposes a single "greet" tool.
 //!
-//! Run: `cargo run --example http_server --features http`
+//! Run: `RUST_LOG=stand_in=info cargo run --example http_server --features http`
+//!
+//! For detailed request tracing:
+//! `RUST_LOG=stand_in=debug cargo run --example http_server --features http`
 //!
 //! Then test with curl:
 //!
@@ -28,6 +31,7 @@
 //! ```
 
 use stand_in::prelude::*;
+use tracing_subscriber::EnvFilter;
 
 #[mcp_tool(name = "greet", description = "Greet someone by name")]
 async fn greet(name: String) -> Result<String> {
@@ -39,6 +43,12 @@ struct HttpExample;
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            EnvFilter::from_default_env().add_directive("stand_in=info".parse().unwrap()),
+        )
+        .init();
+
     // Option A: use default address (127.0.0.1:3000)
     HttpExample::serve_http().await.unwrap();
 

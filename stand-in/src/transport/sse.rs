@@ -3,6 +3,7 @@
 use axum::response::sse::{Event, KeepAlive, Sse};
 use tokio_stream::StreamExt;
 use tokio_stream::wrappers::BroadcastStream;
+use tracing::{debug, trace};
 
 use crate::protocol::JsonRpcResponse;
 
@@ -25,8 +26,14 @@ pub fn notification_stream(
     rx: tokio::sync::broadcast::Receiver<String>,
 ) -> Sse<impl tokio_stream::Stream<Item = Result<Event, std::convert::Infallible>>> {
     let stream = BroadcastStream::new(rx).filter_map(|result| match result {
-        Ok(data) => Some(Ok(Event::default().event("message").data(data))),
-        Err(_) => None,
+        Ok(data) => {
+            trace!("SSE event emitted");
+            Some(Ok(Event::default().event("message").data(data)))
+        }
+        Err(_) => {
+            debug!("SSE lagged message skipped");
+            None
+        }
     });
 
     Sse::new(stream).keep_alive(KeepAlive::default())
