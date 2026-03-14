@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.2] - 2026-03-14
+
+### Added
+
+- **Tracing instrumentation** across the HTTP transport execution path
+  - `http_transport.rs`: `debug`/`info`/`warn` on POST/GET/DELETE handlers
+  - `session_store.rs`: `info` for session create/remove, `debug` for validate
+  - `handler.rs`: `info` for method dispatch, `error`/`warn` for failures
+  - `sse.rs`: `trace` for SSE events, `debug` for lagged messages
+  - Client disconnect detection via `StreamDropGuard` (logs when SSE stream closes)
+- **ASCII startup banner** — block-letter "STAND-IN" with dynamic version and bind address, printed on HTTP server start
+- `tracing-subscriber` as dev-dependency with `EnvFilter` in `examples/http_server.rs`
+
+## [0.0.1] - 2026-03-13
+
 ### Added
 
 - **Streamable HTTP transport** (feature: `http`) — MCP 2025-03-26 spec

@@ -11,7 +11,7 @@ You write with `stand-in`  declarative macros that look like your MCP server —
 
 ## Status
 
-🚧 **Work in Progress** — The project structure is set up, but macros are not yet implemented.
+🚧 **Early Development** — Core macros (`#[mcp_tool]`, `#[mcp_server]`) and both transports (Stdio, Streamable HTTP) are implemented. Resources and prompts are not yet available.
 
 ## Installation
 
@@ -19,7 +19,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-stand-in = "0.0.1"
+stand-in = "0.0.2"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 ```
 
@@ -33,7 +33,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 To enable HTTP transport:
 
 ```toml
-stand-in = { version = "0.0.1", features = ["http"] }
+stand-in = { version = "0.0.2", features = ["http"] }
 ```
 
 ## Quick Start
