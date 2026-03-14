@@ -206,7 +206,7 @@ async fn handle_get(
     };
 
     info!(session_id = %session_id, "SSE notification stream opened");
-    Ok(sse::notification_stream(rx))
+    Ok(sse::notification_stream(rx, Some(session_id.to_string())))
 }
 
 /// DELETE /mcp — session termination.

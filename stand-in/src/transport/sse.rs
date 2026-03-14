@@ -3,7 +3,7 @@
 use axum::response::sse::{Event, KeepAlive, Sse};
 use tokio_stream::StreamExt;
 use tokio_stream::wrappers::BroadcastStream;
-use tracing::{debug, trace};
+use tracing::{debug, info, trace};
 
 use crate::protocol::JsonRpcResponse;
 
@@ -17,22 +17,42 @@ pub fn response_to_event(response: &JsonRpcResponse) -> Result<Event, serde_json
     Ok(Event::default().event("message").data(json))
 }
 
+/// Guard that logs when the SSE stream is dropped (client disconnect or shutdown).
+struct StreamDropGuard {
+    session_id: String,
+}
+
+impl Drop for StreamDropGuard {
+    fn drop(&mut self) {
+        info!(session_id = %self.session_id, "SSE notification stream closed");
+    }
+}
+
 /// Build an SSE response from a broadcast receiver.
 ///
 /// Each received string is emitted as an SSE `message` event.
 /// Lagged messages are silently skipped. Includes a keep-alive
 /// that sends periodic comment frames to prevent connection timeout.
+///
+/// If `session_id` is provided, an info-level log is emitted when the
+/// stream is dropped (client disconnect or server shutdown).
 pub fn notification_stream(
     rx: tokio::sync::broadcast::Receiver<String>,
+    session_id: Option<String>,
 ) -> Sse<impl tokio_stream::Stream<Item = Result<Event, std::convert::Infallible>>> {
-    let stream = BroadcastStream::new(rx).filter_map(|result| match result {
-        Ok(data) => {
-            trace!("SSE event emitted");
-            Some(Ok(Event::default().event("message").data(data)))
-        }
-        Err(_) => {
-            debug!("SSE lagged message skipped");
-            None
+    let guard = session_id.map(|id| StreamDropGuard { session_id: id });
+
+    let stream = BroadcastStream::new(rx).filter_map(move |result| {
+        let _ = &guard;
+        match result {
+            Ok(data) => {
+                trace!("SSE event emitted");
+                Some(Ok(Event::default().event("message").data(data)))
+            }
+            Err(_) => {
+                debug!("SSE lagged message skipped");
+                None
+            }
         }
     });
 
