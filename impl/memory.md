@@ -38,6 +38,7 @@
 - **CI/CD** — GitHub Actions for build (push/PR) and publish (version tags)
 - **Tool discovery** — `inventory` crate for zero-boilerplate auto-registration of `#[mcp_tool]` functions
 - **MCP protocol** — Version 2025-03-26, server identity auto-derived from Cargo.toml via `env!()`
+- **Logging pattern** — Library instruments with `tracing` macros, application configures `tracing-subscriber` (SLF4J facade pattern)
 
 ## Constraints & Reminders
 

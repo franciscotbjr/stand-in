@@ -55,6 +55,17 @@ Instrument the Streamable HTTP server with structured `tracing` logs at every de
 - [x] Called at top of `Transport::run()` before first log line
 - [x] Quality gates pass, commit
 
+### Milestone 6: SSE disconnect logging
+- [x] Add `StreamDropGuard` in `sse.rs` — logs `info` when SSE stream is dropped
+- [x] Guard captured in `filter_map` closure, lives as long as the stream
+- [x] Quality gates pass, commit
+
+### Milestone 7: Version bump + documentation
+- [x] Bump workspace version 0.0.1 → 0.0.2
+- [x] Update README.md (version refs, status section)
+- [x] Add CHANGELOG.md v0.0.2 section, move existing entries under v0.0.1
+- [x] Commit
+
 ## Decisions Made
 
 | Decision | Rationale | Date |
@@ -62,6 +73,7 @@ Instrument the Streamable HTTP server with structured `tracing` logs at every de
 | Library instruments, application configures subscriber | Industry standard (SLF4J, Rust `tracing` docs) — libraries never depend on `tracing-subscriber` | 2026-03-14 |
 | `println!` for banner, not `info!` | Banners are visual, not structured log events | 2026-03-14 |
 | Block-letter ASCII style | Chosen by user from 4 options presented | 2026-03-14 |
+| `StreamDropGuard` for disconnect logging | Drop impl on a guard struct captured in the stream closure — no new deps | 2026-03-14 |
 
 ## Blockers & Notes
 
@@ -73,4 +85,4 @@ Instrument the Streamable HTTP server with structured `tracing` logs at every de
 - **Specification:** `C:\Users\franciscotbjr\.windsurf\plans\trace-http-execution-flow-51994b.md`, `C:\Users\franciscotbjr\.windsurf\plans\ascii-banner-51994b.md`
 - **Reference project:** `D:\development\public\mcp-server-playground` (logging patterns)
 - **Rust log levels:** https://docs.rs/log/latest/log/enum.Level.html
-- **Commits:** `2575f17` (tracing), `cedba78` (banner)
+- **Commits:** `2575f17` (tracing), `cedba78` (banner), `74feb1c` (disconnect fix), `9f4d297` (version + docs)
