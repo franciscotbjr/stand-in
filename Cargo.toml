@@ -3,12 +3,13 @@ members = ["stand-in", "stand-in-macros", "stand-in-reference"]
 resolver = "2"
 
 [workspace.package]
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 license = "MIT"
 repository = "https://github.com/franciscotbjr/stand-in"
 keywords = ["mcp", "ai", "llm", "agent", "server"]
 categories = ["web-programming::websocket", "web-programming::http-server", "artificial-intelligence"]
+exclude = ["impl/", "ARCHITECTURE.md"]
 
 [workspace.dependencies]
 # Runtime
@@ -27,6 +28,7 @@ async-trait = "0.1.89"
 
 # Logging
 tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 
 # HTTP transport (feature-gated)
 axum = "0.8.8"
@@ -45,4 +47,4 @@ inventory = "0.3"
 reqwest = { version = "0.12", features = ["json"] }
 
 # Internal
-stand-in-macros = { path = "stand-in-macros" }
+stand-in-macros = { path = "stand-in-macros", version = "0.0.2" }

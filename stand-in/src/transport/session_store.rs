@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use tokio::sync::RwLock;
+use tracing::{debug, info};
 use uuid::Uuid;
 
 use super::session::Session;
@@ -30,17 +31,26 @@ impl SessionStore {
         let id = Uuid::new_v4().to_string();
         let session = Session::new(id.clone());
         self.sessions.write().await.insert(id.clone(), session);
+        info!(session_id = %id, "Session stored");
         id
     }
 
     /// Check whether a session with the given ID exists.
     pub async fn validate(&self, id: &str) -> bool {
-        self.sessions.read().await.contains_key(id)
+        let exists = self.sessions.read().await.contains_key(id);
+        debug!(session_id = %id, valid = exists, "Session validated");
+        exists
     }
 
     /// Remove a session by ID. Returns `true` if the session existed.
     pub async fn remove(&self, id: &str) -> bool {
-        self.sessions.write().await.remove(id).is_some()
+        let removed = self.sessions.write().await.remove(id).is_some();
+        if removed {
+            info!(session_id = %id, "Session removed");
+        } else {
+            debug!(session_id = %id, "Session not found on remove");
+        }
+        removed
     }
 
     /// Run a closure with a read reference to the session, if it exists.

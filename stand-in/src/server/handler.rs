@@ -1,6 +1,6 @@
 //! JSON-RPC method dispatch for MCP servers.
 
-use tracing::info;
+use tracing::{debug, error, info, warn};
 
 use crate::protocol::{JsonRpcError, JsonRpcRequest, JsonRpcResponse};
 use crate::tool::{CallToolParams, ToolRegistry};
@@ -45,6 +45,11 @@ impl RequestHandler {
     }
 
     fn handle_initialize(&self, id: serde_json::Value) -> JsonRpcResponse {
+        info!(
+            server = %self.server_info.name,
+            version = %self.server_info.version,
+            "Handling initialize — protocol 2025-03-26"
+        );
         let result = InitializeResult {
             protocol_version: "2025-03-26".to_string(),
             capabilities: ServerCapabilities::new().with_tools(ToolsCapability::default()),
@@ -56,6 +61,7 @@ impl RequestHandler {
 
     fn handle_tools_list(&self, id: serde_json::Value) -> JsonRpcResponse {
         let definitions = self.registry.list_definitions();
+        info!(tool_count = definitions.len(), "Handling tools/list");
         let result = crate::tool::ListToolsResult { tools: definitions };
         JsonRpcResponse::success(id, serde_json::to_value(result).unwrap())
     }
@@ -68,6 +74,7 @@ impl RequestHandler {
         let params = match params {
             Some(p) => p,
             None => {
+                warn!("tools/call missing params");
                 return JsonRpcResponse::error(
                     id,
                     JsonRpcError::invalid_params("Missing params for tools/call"),
@@ -78,17 +85,24 @@ impl RequestHandler {
         let call_params: CallToolParams = match serde_json::from_value(params.clone()) {
             Ok(p) => p,
             Err(e) => {
+                error!(error = %e, "tools/call param deserialization failed");
                 return JsonRpcResponse::error(id, JsonRpcError::invalid_params(e.to_string()));
             }
         };
+
+        info!(tool = %call_params.name, "Handling tools/call");
 
         match self
             .registry
             .call_tool(&call_params.name, call_params.arguments)
             .await
         {
-            Ok(result) => JsonRpcResponse::success(id, serde_json::to_value(result).unwrap()),
+            Ok(result) => {
+                debug!(tool = %call_params.name, "tools/call succeeded");
+                JsonRpcResponse::success(id, serde_json::to_value(result).unwrap())
+            }
             Err(e) => {
+                warn!(tool = %call_params.name, error = %e, "tools/call tool execution error");
                 let error_result = crate::tool::CallToolResult::error(e.to_string());
                 JsonRpcResponse::success(id, serde_json::to_value(error_result).unwrap())
             }

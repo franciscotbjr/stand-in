@@ -37,3 +37,4 @@ required-features = ["http"]
 
 [dev-dependencies]
 reqwest.workspace = true
+tracing-subscriber.workspace = true

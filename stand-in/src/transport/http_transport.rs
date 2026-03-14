@@ -11,7 +11,7 @@ use axum::routing::{delete, get, post};
 use axum::{Json, Router};
 use tokio::net::TcpListener;
 use tower_http::cors::CorsLayer;
-use tracing::info;
+use tracing::{debug, info, warn};
 
 use crate::error::Result;
 use crate::protocol::{JsonRpcError, JsonRpcRequest, JsonRpcResponse};
@@ -87,12 +87,15 @@ impl Transport for HttpTransport {
             .with_state(state);
 
         let listener = TcpListener::bind(self.addr).await?;
-        info!("HttpTransport: listening on {}", self.addr);
+        print_banner(self.addr);
+        info!(addr = %self.addr, "HttpTransport listening");
+        info!("Endpoint: POST|GET|DELETE /mcp");
 
         axum::serve(listener, app)
             .with_graceful_shutdown(shutdown_signal())
             .await?;
 
+        info!("HttpTransport shut down");
         Ok(())
     }
 }
@@ -117,10 +120,17 @@ async fn handle_post(
     let is_initialize = request.method == "initialize";
     let id = request.id.clone().unwrap_or(serde_json::Value::Null);
 
+    debug!(
+        method = %request.method,
+        session_id = ?session_id,
+        "POST /mcp"
+    );
+
     // Non-initialize requests require a valid session
     if !is_initialize {
         match &session_id {
             None => {
+                warn!(method = %request.method, "POST /mcp rejected: missing Mcp-Session-Id header");
                 return (
                     StatusCode::BAD_REQUEST,
                     HeaderMap::new(),
@@ -132,6 +142,7 @@ async fn handle_post(
             }
             Some(sid) => {
                 if !state.sessions.validate(sid).await {
+                    warn!(session_id = %sid, "POST /mcp rejected: unknown session");
                     return (
                         StatusCode::NOT_FOUND,
                         HeaderMap::new(),
@@ -152,6 +163,7 @@ async fn handle_post(
     let mut response_headers = HeaderMap::new();
     if is_initialize && response.error.is_none() {
         let new_session_id = state.sessions.create().await;
+        info!(session_id = %new_session_id, "Session created on initialize");
         if let Ok(val) = new_session_id.parse() {
             response_headers.insert(SESSION_HEADER, val);
         }
@@ -161,6 +173,7 @@ async fn handle_post(
         response_headers.insert(SESSION_HEADER, val);
     }
 
+    debug!(method = %request.method, status = 200, "POST /mcp response sent");
     (StatusCode::OK, response_headers, Json(response))
 }
 
@@ -169,32 +182,70 @@ async fn handle_get(
     State(state): State<AppState>,
     headers: HeaderMap,
 ) -> std::result::Result<impl IntoResponse, StatusCode> {
-    let session_id = headers
-        .get(SESSION_HEADER)
-        .and_then(|v| v.to_str().ok())
-        .ok_or(StatusCode::BAD_REQUEST)?;
+    let session_id = headers.get(SESSION_HEADER).and_then(|v| v.to_str().ok());
+
+    let session_id = match session_id {
+        Some(sid) => sid,
+        None => {
+            warn!("GET /mcp rejected: missing Mcp-Session-Id header");
+            return Err(StatusCode::BAD_REQUEST);
+        }
+    };
 
     let rx = state
         .sessions
         .with_session(session_id, |s| s.subscribe_notifications())
-        .await
-        .ok_or(StatusCode::NOT_FOUND)?;
+        .await;
 
-    Ok(sse::notification_stream(rx))
+    let rx = match rx {
+        Some(rx) => rx,
+        None => {
+            warn!(session_id = %session_id, "GET /mcp rejected: unknown session");
+            return Err(StatusCode::NOT_FOUND);
+        }
+    };
+
+    info!(session_id = %session_id, "SSE notification stream opened");
+    Ok(sse::notification_stream(rx, Some(session_id.to_string())))
 }
 
 /// DELETE /mcp — session termination.
 async fn handle_delete(State(state): State<AppState>, headers: HeaderMap) -> StatusCode {
     let session_id = match headers.get(SESSION_HEADER).and_then(|v| v.to_str().ok()) {
         Some(id) => id,
-        None => return StatusCode::BAD_REQUEST,
+        None => {
+            warn!("DELETE /mcp rejected: missing Mcp-Session-Id header");
+            return StatusCode::BAD_REQUEST;
+        }
     };
 
     if state.sessions.remove(session_id).await {
+        info!(session_id = %session_id, "Session terminated");
         StatusCode::OK
     } else {
+        warn!(session_id = %session_id, "DELETE /mcp rejected: unknown session");
         StatusCode::NOT_FOUND
     }
+}
+
+// ---------------------------------------------------------------------------
+// Banner
+// ---------------------------------------------------------------------------
+
+fn print_banner(addr: SocketAddr) {
+    let version = env!("CARGO_PKG_VERSION");
+    println!(
+        r"
+ ███████ ████████  █████  ███    ██ ██████          ██ ███    ██
+ ██         ██    ██   ██ ████   ██ ██   ██         ██ ████   ██
+ ███████    ██    ███████ ██ ██  ██ ██   ██ ██████  ██ ██ ██  ██
+      ██    ██    ██   ██ ██  ██ ██ ██   ██         ██ ██  ██ ██
+ ███████    ██    ██   ██ ██   ████ ██████          ██ ██   ████
+
+  v{version} | MCP 2025-03-26 | Streamable HTTP
+  Listening on http://{addr}
+"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -224,7 +275,7 @@ async fn shutdown_signal() {
         () = terminate => {},
     }
 
-    info!("HttpTransport: shutdown signal received");
+    info!("Shutdown signal received");
 }
 
 #[cfg(test)]
