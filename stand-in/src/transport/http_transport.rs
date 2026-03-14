@@ -87,6 +87,7 @@ impl Transport for HttpTransport {
             .with_state(state);
 
         let listener = TcpListener::bind(self.addr).await?;
+        print_banner(self.addr);
         info!(addr = %self.addr, "HttpTransport listening");
         info!("Endpoint: POST|GET|DELETE /mcp");
 
@@ -225,6 +226,26 @@ async fn handle_delete(State(state): State<AppState>, headers: HeaderMap) -> Sta
         warn!(session_id = %session_id, "DELETE /mcp rejected: unknown session");
         StatusCode::NOT_FOUND
     }
+}
+
+// ---------------------------------------------------------------------------
+// Banner
+// ---------------------------------------------------------------------------
+
+fn print_banner(addr: SocketAddr) {
+    let version = env!("CARGO_PKG_VERSION");
+    println!(
+        r"
+ ███████ ████████  █████  ███    ██ ██████          ██ ███    ██
+ ██         ██    ██   ██ ████   ██ ██   ██         ██ ████   ██
+ ███████    ██    ███████ ██ ██  ██ ██   ██ ██████  ██ ██ ██  ██
+      ██    ██    ██   ██ ██  ██ ██ ██   ██         ██ ██  ██ ██
+ ███████    ██    ██   ██ ██   ████ ██████          ██ ██   ████
+
+  v{version} | MCP 2025-03-26 | Streamable HTTP
+  Listening on http://{addr}
+"
+    );
 }
 
 // ---------------------------------------------------------------------------
