@@ -9,6 +9,7 @@ license = "MIT"
 repository = "https://github.com/franciscotbjr/stand-in"
 keywords = ["mcp", "ai", "llm", "agent", "server"]
 categories = ["web-programming::websocket", "web-programming::http-server", "artificial-intelligence"]
+exclude = ["impl/", "ARCHITECTURE.md"]
 
 [workspace.dependencies]
 # Runtime
@@ -46,4 +47,4 @@ inventory = "0.3"
 reqwest = { version = "0.12", features = ["json"] }
 
 # Internal
-stand-in-macros = { path = "stand-in-macros" }
+stand-in-macros = { path = "stand-in-macros", version = "0.0.2" }
