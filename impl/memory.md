@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 006 | mcp_prompt Support | feature | 2026-03-14 |
 | 005 | Tracing & Banner | feature | 2026-03-14 |
 | 004 | Streamable HTTP | feature | 2026-03-13 |
 | 003 | Stdio Server | feature | 2026-03-12 |
@@ -57,6 +58,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 006 | mcp_prompt Support | feature | done | `history/006-mcp-prompt.md` |
 | 005 | Tracing & Banner | feature | done | `history/005-tracing-and-banner.md` |
 | 004 | Streamable HTTP | feature | done | `history/004-streamable-http.md` |
 | 003 | Stdio Server | feature | done | `history/003-stdio-server.md` |

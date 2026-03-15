@@ -28,6 +28,7 @@
 //! ```
 
 pub mod error;
+pub mod prompt;
 pub mod protocol;
 pub mod server;
 pub mod tool;
@@ -38,6 +39,7 @@ pub use stand_in_macros::*;
 /// Prelude module — import everything you need with `use stand_in::prelude::*`.
 pub mod prelude {
     pub use crate::error::{Error, Result};
+    pub use crate::prompt::{Prompt, PromptMessage};
     pub use crate::protocol::{JsonRpcError, JsonRpcNotification, JsonRpcRequest, JsonRpcResponse};
     pub use crate::server::{
         ClientInfo, InitializeParams, InitializeResult, RequestHandler, ServerCapabilities,

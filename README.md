@@ -11,7 +11,7 @@ You write with `stand-in`  declarative macros that look like your MCP server —
 
 ## Status
 
-🚧 **Early Development** — Core macros (`#[mcp_tool]`, `#[mcp_server]`) and both transports (Stdio, Streamable HTTP) are implemented. Resources and prompts are not yet available.
+🚧 **Early Development** — Core macros (`#[mcp_tool]`, `#[mcp_server]`, `#[mcp_prompt]`) and both transports (Stdio, Streamable HTTP) are implemented. Resources are not yet available.
 
 ## Installation
 
