@@ -39,10 +39,7 @@ mod tests {
 
     #[test]
     fn test_role_serializes_lowercase() {
-        assert_eq!(
-            serde_json::to_value(PromptRole::User).unwrap(),
-            "user"
-        );
+        assert_eq!(serde_json::to_value(PromptRole::User).unwrap(), "user");
         assert_eq!(
             serde_json::to_value(PromptRole::Assistant).unwrap(),
             "assistant"

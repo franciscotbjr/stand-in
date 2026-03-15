@@ -324,7 +324,10 @@ async fn test_prompts_list_with_session() {
     let prompts = body["result"]["prompts"].as_array().unwrap();
     assert_eq!(prompts.len(), 1);
     assert_eq!(prompts[0]["name"], "write_greeting");
-    assert_eq!(prompts[0]["description"], "Generate a greeting message for a person");
+    assert_eq!(
+        prompts[0]["description"],
+        "Generate a greeting message for a person"
+    );
 }
 
 #[tokio::test]
@@ -351,7 +354,10 @@ async fn test_prompts_get_with_session() {
 
     assert_eq!(resp.status(), 200);
     let body: Value = resp.json().await.unwrap();
-    assert_eq!(body["result"]["description"], "Generate a greeting message for a person");
+    assert_eq!(
+        body["result"]["description"],
+        "Generate a greeting message for a person"
+    );
     assert_eq!(body["result"]["messages"][0]["role"], "user");
     assert_eq!(
         body["result"]["messages"][0]["content"]["text"],
