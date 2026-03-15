@@ -28,7 +28,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 | Feature | Default | Description |
 |---------|---------|-------------|
 | `stdio` | ✅ | Stdio transport for local/CLI usage |
-| `http` | ❌ | Streamable HTTP transport (MCP spec 2025-03-26) |
+| `http` | ✅ | Streamable HTTP transport (MCP spec 2025-03-26) |
 
 To enable HTTP transport:
 
