@@ -27,6 +27,18 @@ async fn add(a: i64, b: i64) -> Result<String> {
     Ok(format!("{}", a + b))
 }
 
+#[mcp_prompt(
+    name = "write_greeting",
+    description = "Generate a greeting message for a person"
+)]
+async fn write_greeting(name: String, style: Option<String>) -> Result<Prompt> {
+    let text = match style.as_deref() {
+        Some("formal") => format!("Write a formal greeting for {name}."),
+        _ => format!("Write a greeting for {name}."),
+    };
+    Ok(Prompt::user(text))
+}
+
 #[mcp_server]
 struct TestHttpServer;
 
@@ -287,4 +299,93 @@ async fn test_get_with_invalid_session_returns_404() {
         .unwrap();
 
     assert_eq!(resp.status(), 404);
+}
+
+#[tokio::test]
+async fn test_prompts_list_with_session() {
+    let base_url = spawn_server().await;
+    let c = client();
+    let session_id = initialize(&c, &base_url).await;
+
+    let resp = c
+        .post(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .json(&json!({
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "prompts/list"
+        }))
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 200);
+    let body: Value = resp.json().await.unwrap();
+    let prompts = body["result"]["prompts"].as_array().unwrap();
+    assert_eq!(prompts.len(), 1);
+    assert_eq!(prompts[0]["name"], "write_greeting");
+    assert_eq!(
+        prompts[0]["description"],
+        "Generate a greeting message for a person"
+    );
+}
+
+#[tokio::test]
+async fn test_prompts_get_with_session() {
+    let base_url = spawn_server().await;
+    let c = client();
+    let session_id = initialize(&c, &base_url).await;
+
+    let resp = c
+        .post(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .json(&json!({
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "prompts/get",
+            "params": {
+                "name": "write_greeting",
+                "arguments": { "name": "Alice", "style": "formal" }
+            }
+        }))
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 200);
+    let body: Value = resp.json().await.unwrap();
+    assert_eq!(
+        body["result"]["description"],
+        "Generate a greeting message for a person"
+    );
+    assert_eq!(body["result"]["messages"][0]["role"], "user");
+    assert_eq!(
+        body["result"]["messages"][0]["content"]["text"],
+        "Write a formal greeting for Alice."
+    );
+}
+
+#[tokio::test]
+async fn test_prompts_get_unknown_returns_error() {
+    let base_url = spawn_server().await;
+    let c = client();
+    let session_id = initialize(&c, &base_url).await;
+
+    let resp = c
+        .post(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .json(&json!({
+            "jsonrpc": "2.0",
+            "id": 6,
+            "method": "prompts/get",
+            "params": { "name": "nonexistent" }
+        }))
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 200);
+    let body: Value = resp.json().await.unwrap();
+    assert!(body["error"].is_object());
+    assert_eq!(body["error"]["code"], -32601);
 }

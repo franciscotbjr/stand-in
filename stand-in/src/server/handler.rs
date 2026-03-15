@@ -2,23 +2,30 @@
 
 use tracing::{debug, error, info, warn};
 
+use crate::prompt::{GetPromptParams, PromptRegistry};
 use crate::protocol::{JsonRpcError, JsonRpcRequest, JsonRpcResponse};
 use crate::tool::{CallToolParams, ToolRegistry};
 
-use super::{InitializeResult, ServerCapabilities, ServerInfo, ToolsCapability};
+use super::{InitializeResult, PromptsCapability, ServerCapabilities, ServerInfo, ToolsCapability};
 
 /// Dispatches incoming JSON-RPC requests to the appropriate handler.
 #[derive(Debug)]
 pub struct RequestHandler {
     registry: ToolRegistry,
+    prompt_registry: PromptRegistry,
     server_info: ServerInfo,
 }
 
 impl RequestHandler {
     /// Create a new request handler.
-    pub fn new(registry: ToolRegistry, server_info: ServerInfo) -> Self {
+    pub fn new(
+        registry: ToolRegistry,
+        prompt_registry: PromptRegistry,
+        server_info: ServerInfo,
+    ) -> Self {
         Self {
             registry,
+            prompt_registry,
             server_info,
         }
     }
@@ -37,6 +44,8 @@ impl RequestHandler {
             }
             "tools/list" => self.handle_tools_list(id),
             "tools/call" => self.handle_tools_call(id, &request.params).await,
+            "prompts/list" => self.handle_prompts_list(id),
+            "prompts/get" => self.handle_prompts_get(id, &request.params).await,
             method => {
                 info!(method, "Unknown method requested");
                 JsonRpcResponse::error(id, JsonRpcError::method_not_found(method))
@@ -52,7 +61,9 @@ impl RequestHandler {
         );
         let result = InitializeResult {
             protocol_version: "2025-03-26".to_string(),
-            capabilities: ServerCapabilities::new().with_tools(ToolsCapability::default()),
+            capabilities: ServerCapabilities::new()
+                .with_tools(ToolsCapability::default())
+                .with_prompts(PromptsCapability::default()),
             server_info: self.server_info.clone(),
         };
 
@@ -108,12 +119,68 @@ impl RequestHandler {
             }
         }
     }
+
+    fn handle_prompts_list(&self, id: serde_json::Value) -> JsonRpcResponse {
+        let definitions = self.prompt_registry.list_definitions();
+        info!(prompt_count = definitions.len(), "Handling prompts/list");
+        let result = crate::prompt::ListPromptsResult {
+            prompts: definitions,
+        };
+        JsonRpcResponse::success(id, serde_json::to_value(result).unwrap())
+    }
+
+    async fn handle_prompts_get(
+        &self,
+        id: serde_json::Value,
+        params: &Option<serde_json::Value>,
+    ) -> JsonRpcResponse {
+        let params = match params {
+            Some(p) => p,
+            None => {
+                warn!("prompts/get missing params");
+                return JsonRpcResponse::error(
+                    id,
+                    JsonRpcError::invalid_params("Missing params for prompts/get"),
+                );
+            }
+        };
+
+        let get_params: GetPromptParams = match serde_json::from_value(params.clone()) {
+            Ok(p) => p,
+            Err(e) => {
+                error!(error = %e, "prompts/get param deserialization failed");
+                return JsonRpcResponse::error(id, JsonRpcError::invalid_params(e.to_string()));
+            }
+        };
+
+        info!(prompt = %get_params.name, "Handling prompts/get");
+
+        let arguments = get_params
+            .arguments
+            .unwrap_or(serde_json::Value::Object(serde_json::Map::new()));
+
+        match self
+            .prompt_registry
+            .get_prompt(&get_params.name, arguments)
+            .await
+        {
+            Ok(result) => {
+                debug!(prompt = %get_params.name, "prompts/get succeeded");
+                JsonRpcResponse::success(id, serde_json::to_value(result).unwrap())
+            }
+            Err(e) => {
+                warn!(prompt = %get_params.name, error = %e, "prompts/get error");
+                JsonRpcResponse::error(id, JsonRpcError::method_not_found(&get_params.name))
+            }
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::error::Result;
+    use crate::prompt::{McpPrompt, Prompt, PromptArgument};
     use crate::tool::{CallToolResult, McpTool};
     use async_trait::async_trait;
 
@@ -144,14 +211,38 @@ mod tests {
         }
     }
 
+    #[derive(Debug)]
+    struct HelloPrompt;
+
+    #[async_trait]
+    impl McpPrompt for HelloPrompt {
+        fn name(&self) -> &str {
+            "hello"
+        }
+
+        fn description(&self) -> &str {
+            "Say hello"
+        }
+
+        fn arguments(&self) -> Vec<PromptArgument> {
+            vec![]
+        }
+
+        async fn execute(&self, _arguments: serde_json::Value) -> Result<Prompt> {
+            Ok(Prompt::user("Hello!"))
+        }
+    }
+
     fn make_handler() -> RequestHandler {
         let mut registry = ToolRegistry::new();
         registry.register(Box::new(EchoTool));
+        let mut prompt_registry = PromptRegistry::new();
+        prompt_registry.register(Box::new(HelloPrompt));
         let server_info = ServerInfo {
             name: "test-server".to_string(),
             version: "0.1.0".to_string(),
         };
-        RequestHandler::new(registry, server_info)
+        RequestHandler::new(registry, prompt_registry, server_info)
     }
 
     fn make_request(
@@ -184,6 +275,7 @@ mod tests {
         let result = resp.result.unwrap();
         assert_eq!(result["protocolVersion"], "2025-03-26");
         assert_eq!(result["serverInfo"]["name"], "test-server");
+        assert!(result["capabilities"]["prompts"].is_object());
     }
 
     #[tokio::test]
@@ -226,6 +318,53 @@ mod tests {
     async fn test_handle_missing_params() {
         let handler = make_handler();
         let req = make_request("tools/call", serde_json::json!(5), None);
+        let resp = handler.handle(&req).await;
+        assert!(resp.error.is_some());
+        assert_eq!(resp.error.unwrap().code, -32602);
+    }
+
+    #[tokio::test]
+    async fn test_handle_prompts_list() {
+        let handler = make_handler();
+        let req = make_request("prompts/list", serde_json::json!(6), None);
+        let resp = handler.handle(&req).await;
+        assert!(resp.error.is_none());
+        let result = resp.result.unwrap();
+        assert_eq!(result["prompts"][0]["name"], "hello");
+    }
+
+    #[tokio::test]
+    async fn test_handle_prompts_get() {
+        let handler = make_handler();
+        let req = make_request(
+            "prompts/get",
+            serde_json::json!(7),
+            Some(serde_json::json!({"name": "hello"})),
+        );
+        let resp = handler.handle(&req).await;
+        assert!(resp.error.is_none());
+        let result = resp.result.unwrap();
+        assert_eq!(result["messages"][0]["content"]["text"], "Hello!");
+        assert_eq!(result["description"], "Say hello");
+    }
+
+    #[tokio::test]
+    async fn test_handle_prompts_get_unknown() {
+        let handler = make_handler();
+        let req = make_request(
+            "prompts/get",
+            serde_json::json!(8),
+            Some(serde_json::json!({"name": "nonexistent"})),
+        );
+        let resp = handler.handle(&req).await;
+        assert!(resp.error.is_some());
+        assert_eq!(resp.error.unwrap().code, -32601);
+    }
+
+    #[tokio::test]
+    async fn test_handle_prompts_get_missing_params() {
+        let handler = make_handler();
+        let req = make_request("prompts/get", serde_json::json!(9), None);
         let resp = handler.handle(&req).await;
         assert!(resp.error.is_some());
         assert_eq!(resp.error.unwrap().code, -32602);

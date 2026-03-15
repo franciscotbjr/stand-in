@@ -3,7 +3,7 @@ members = ["stand-in", "stand-in-macros", "stand-in-reference"]
 resolver = "2"
 
 [workspace.package]
-version = "0.0.2"
+version = "0.0.3"
 edition = "2024"
 license = "MIT"
 repository = "https://github.com/franciscotbjr/stand-in"
@@ -44,7 +44,7 @@ proc-macro2 = "1.0.106"
 inventory = "0.3"
 
 # Testing
-reqwest = { version = "0.12", features = ["json"] }
+reqwest = { version = "0.13.2", features = ["json"] }
 
 # Internal
-stand-in-macros = { path = "stand-in-macros", version = "0.0.2" }
+stand-in-macros = { path = "stand-in-macros", version = "0.0.3" }

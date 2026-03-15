@@ -31,6 +31,10 @@ pub enum Error {
     /// Session error.
     #[error("Session error: {0}")]
     SessionError(String),
+
+    /// Prompt execution error.
+    #[error("Prompt error: {0}")]
+    PromptError(String),
 }
 
 impl From<std::io::Error> for Error {

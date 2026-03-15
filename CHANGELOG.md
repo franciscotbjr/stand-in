@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2026-03-14
+
+### Added
+
+- **`#[mcp_prompt]` macro** — declare reusable prompt templates with typed arguments
+  - Infers argument list from function signature (`Option<T>` → optional)
+  - Generates `McpPrompt` trait implementation and registers via `inventory`
+  - Return type `Prompt` with `Prompt::user(text)` and `Prompt::assistant(text)` constructors
+- **`prompts/list`** dispatch in `RequestHandler` — returns all registered prompts
+- **`prompts/get`** dispatch in `RequestHandler` — executes a prompt by name with arguments
+- **`PromptsCapability`** advertised in `initialize` response (`ServerCapabilities`)
+- **`PromptRegistry`** — holds registered prompts, dispatches `get_prompt`
+- **`PromptError`** variant added to `Error` enum
+- `Prompt` and `PromptMessage` re-exported from `stand_in::prelude`
+
 ## [0.0.2] - 2026-03-14
 
 ### Added

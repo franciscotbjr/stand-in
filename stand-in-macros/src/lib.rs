@@ -8,6 +8,7 @@
 
 use proc_macro::TokenStream;
 
+mod mcp_prompt;
 mod mcp_server;
 mod mcp_tool;
 mod schema;
@@ -81,7 +82,6 @@ pub fn mcp_resource(_attr: TokenStream, item: TokenStream) -> TokenStream {
 /// }
 /// ```
 #[proc_macro_attribute]
-pub fn mcp_prompt(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    // TODO: Implement prompt macro
-    item
+pub fn mcp_prompt(attr: TokenStream, item: TokenStream) -> TokenStream {
+    mcp_prompt::expand(attr.into(), item.into()).into()
 }
