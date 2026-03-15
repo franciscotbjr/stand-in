@@ -19,7 +19,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-stand-in = "0.0.2"
+stand-in = "0.0.3"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 ```
 
@@ -33,7 +33,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 To enable HTTP transport:
 
 ```toml
-stand-in = { version = "0.0.2", features = ["http"] }
+stand-in = { version = "0.0.3", features = ["http"] }
 ```
 
 ## Quick Start
@@ -60,6 +60,25 @@ async fn main() {
 ```
 
 That's it. No handler registration. No JSON-RPC routing. No protocol plumbing. The stand-in handles the setup; the compiler delivers the performance.
+
+### Adding a Prompt
+
+```rust
+use stand_in::prelude::*;
+
+#[mcp_prompt(
+    name = "summarize",
+    description = "Summarize a document for a given audience"
+)]
+async fn summarize(document: String, audience: Option<String>) -> Result<Prompt> {
+    let level = audience.as_deref().unwrap_or("general");
+    Ok(Prompt::user(format!(
+        "Summarize the following for a {level} audience:\n\n{document}"
+    )))
+}
+```
+
+`Option<T>` parameters become optional arguments in the MCP prompt definition. Required parameters stay required. The return type is always `Result<Prompt>`.
 
 ## Philosophy
 
@@ -93,40 +112,32 @@ stand-in/
 ## Features
 
 - **`#[mcp_tool]`** — Declare a tool with typed parameters. Schema is inferred from the function signature.
-- **`#[mcp_resource]`** — Expose a resource with URI templates. Supports static and dynamic content.
-- **`#[mcp_prompt]`** — Define reusable prompt templates with typed arguments.
+- **`#[mcp_prompt]`** — Define reusable prompt templates with typed arguments. Arguments are inferred from the function signature; `Option<T>` parameters are optional.
 - **`#[mcp_server]`** — Wire everything together. Generates initialization, capability negotiation, and dispatch.
 - **Transports** — Stdio (default) and Streamable HTTP (feature-gated). Extensible via the `Transport` trait.
 - **Async-first** — Built on `tokio`. Every handler is `async fn`.
+- **`#[mcp_resource]`** — _(not yet implemented)_
 
 ## Example: A More Complete Server
 
 ```rust
 use stand_in::prelude::*;
 
-/// A server that exposes project management tools and resources.
-#[mcp_server(
-    name = "project-hub",
-    version = "0.1.0"
-)]
+/// A server that exposes project management tools and prompts.
+/// Server name and version are read from Cargo.toml at compile time.
+#[mcp_server]
 struct ProjectHub;
 
-#[mcp_tool(description = "List all open tasks for a project")]
-async fn list_tasks(project_id: String) -> Result<Vec<Task>> {
-    db::tasks::find_open(&project_id).await
+#[mcp_tool(name = "list_tasks", description = "List all open tasks for a project")]
+async fn list_tasks(project_id: String) -> Result<String> {
+    // ... fetch from database
+    Ok(format!("Tasks for {project_id}: ..."))
 }
 
-#[mcp_tool(description = "Create a new task")]
-async fn create_task(project_id: String, title: String, assignee: Option<String>) -> Result<Task> {
-    db::tasks::create(&project_id, &title, assignee.as_deref()).await
-}
-
-#[mcp_resource(
-    uri = "project://{project_id}/readme",
-    description = "The project README"
-)]
-async fn project_readme(project_id: String) -> Result<String> {
-    storage::read_file(&project_id, "README.md").await
+#[mcp_tool(name = "create_task", description = "Create a new task")]
+async fn create_task(project_id: String, title: String, assignee: Option<String>) -> Result<String> {
+    // ... write to database
+    Ok(format!("Created task '{title}' in {project_id}"))
 }
 
 #[mcp_prompt(
@@ -134,17 +145,15 @@ async fn project_readme(project_id: String) -> Result<String> {
     description = "Generate a project status summary"
 )]
 async fn summarize_project(project_id: String, format: Option<String>) -> Result<Prompt> {
-    let tasks = list_tasks(project_id.clone()).await?;
+    let level = format.as_deref().unwrap_or("brief");
     Ok(Prompt::user(format!(
-        "Summarize this project (format: {}). Open tasks: {:?}",
-        format.unwrap_or("brief".into()),
-        tasks
+        "Summarize project {project_id} in a {level} format."
     )))
 }
 
 #[tokio::main]
 async fn main() {
-    ProjectHub::serve(StdioTransport::default()).await;
+    ProjectHub::serve(StdioTransport::default()).await.unwrap();
 }
 ```
 
