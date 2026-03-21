@@ -1,13 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls -la \"d:\\\\development\\\\public\\\\stand-in\\\\stand-in\\\\src\"\" | grep -E \"^d \")",
       "Bash(cargo build:*)",
       "Bash(cargo test:*)",
       "Bash(cargo clippy:*)",
       "Bash(cargo fmt:*)",
       "Bash(cargo doc:*)",
-      "Bash(cargo check:*)"
+      "Bash(cargo check:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh api:*)"
     ]
   }
 }
