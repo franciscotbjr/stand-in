@@ -10,29 +10,20 @@
 ## Inputs
 
 - Implemented code with tests (from Phase 4)
-- Project Definition — specifically the **Quality Gates** section
+- Project Definition — specifically the Quality Gates section
 - Specification documents — for acceptance criteria verification
 
 ## Activities
 
 ### 1. Run Quality Gates
 
-Execute every quality gate defined in the Project Definition. For this project:
+Execute every quality gate defined in the Project Definition:
 
 ```bash
-# Linter
-cargo clippy --all-features -- -D warnings
-
-# Formatter check
 cargo fmt --check
-
-# Tests
+cargo clippy --all-features -- -D warnings
 cargo test --all-features
-
-# Build
 cargo build --all-features
-
-# Doc build
 cargo doc --all-features --no-deps
 ```
 
@@ -44,13 +35,10 @@ Go through the specification's acceptance criteria one by one:
 
 - [ ] Criterion 1 — Verified by [test name / manual check]
 - [ ] Criterion 2 — Verified by [test name / manual check]
-- [ ] ...
 
 If any criterion is not met, return to the Implement phase.
 
 ### 3. Review Changes
-
-Perform a self-review:
 
 - **Diff review** — Are all changes intentional? Any debug code left?
 - **Convention check** — Does everything follow the Project Definition?
@@ -59,26 +47,20 @@ Perform a self-review:
 
 ### 4. Update Documentation
 
-Update as needed:
-
 - **README** — If the feature changes setup, usage, or API surface
 - **CHANGELOG** — Add entry for the change
 - **API docs** — If public interfaces changed
 - **Architecture docs** — If structure or patterns changed
-- **ADRs** — If new decisions were made during implementation
 
 ### 5. Prepare Delivery Artifact
 
-Depending on the project:
-
-- **Write commit message** — Clear, descriptive commit
+- **Write commit message** — Use the write-commit-message prompt
 - **Create PR/MR** — With description referencing the spec
 - **Tag release** — If this completes a version milestone
-- **Deploy** — If the project has a deployment pipeline
 
 ## Outputs
 
-1. **All quality gates passing** — Documented or evident from CI
+1. **All quality gates passing**
 2. **Updated documentation** — README, CHANGELOG, API docs as needed
 3. **Clean delivery artifact** — Commit, PR, release tag, or deployment
 
@@ -99,8 +81,6 @@ Depending on the project:
 
 ## After Verification
 
-The iteration is complete. Next steps:
-
-- **More milestones remaining?** — Return to [Phase 3: Specify](03-specify.md) for the next milestone
-- **New work unit?** — Return to [Phase 1: Analyze](01-analyze.md)
-- **Update memory.md** — Move iteration from Active Work to Recent Completions
+- **More milestones remaining?** — Return to Phase 3: Specify for the next milestone
+- **New work unit?** — Return to Phase 1: Analyze
+- **Session ending?** — Use save-session to generate a session summary

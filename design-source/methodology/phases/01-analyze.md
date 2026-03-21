@@ -13,7 +13,7 @@
 
 - Feature request, bug report, or change description
 - Existing codebase (if applicable)
-- Project Definition (`impl/project-definition.md`)
+- Project Definition
 
 ## Activities
 
@@ -28,8 +28,6 @@ Break the request into discrete, understandable pieces:
 
 ### 2. Complexity Assessment
 
-Categorize each piece by complexity:
-
 | Complexity | Characteristics | Typical Effort |
 |------------|----------------|----------------|
 | **Simple** | Few moving parts, well-understood pattern, no unknowns | Single iteration |
@@ -37,8 +35,6 @@ Categorize each piece by complexity:
 | **Complex** | Cross-cutting concerns, new patterns, significant unknowns | Multiple iterations |
 
 ### 3. Dependency Mapping
-
-Identify what this work depends on and what depends on it:
 
 - **Upstream:** What must exist before this can be built?
 - **Downstream:** What will break or change as a result?
@@ -55,8 +51,6 @@ List what you don't know yet:
 For each unknown, decide: **research now** or **defer to planning phase**.
 
 ## Outputs
-
-A clear understanding documented as:
 
 1. **Requirements summary** — What we're building and why
 2. **Complexity breakdown** — Simple/medium/complex categorization of sub-tasks
@@ -80,4 +74,4 @@ A clear understanding documented as:
 
 ## Next Phase
 
-After analysis is complete, proceed to [Phase 2: Plan](02-plan.md).
+After analysis is complete, proceed to Phase 2: Plan.

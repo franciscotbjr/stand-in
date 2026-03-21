@@ -21,10 +21,6 @@ State the decision clearly:
 
 > "We need to decide [what] because [why]."
 
-Examples:
-- "We need to decide on the error handling pattern because multiple approaches are viable."
-- "We need to decide whether to use a monorepo or multi-repo because it affects CI and dependency management."
-
 ### Step 2: List Alternatives
 
 For each alternative, document:
@@ -47,9 +43,7 @@ Evaluate alternatives using these criteria (in order of priority):
 
 ### Step 4: Decide and Record
 
-Make the decision and record it using an Architecture Decision Record.
-
-The record should capture:
+Make the decision and record it. The record should capture:
 - **What** was decided
 - **Why** this option was chosen
 - **What alternatives** were considered
@@ -60,18 +54,16 @@ The record should capture:
 Ensure the decision is visible:
 - Reference the ADR in relevant code comments
 - Mention it in PR descriptions
-- Update the Project Profile if the decision changes conventions
+- Update the Project Definition if the decision changes conventions
 
 ## Handling Uncertainty
-
-When you're unsure:
 
 | Situation | Action |
 |-----------|--------|
 | Missing information | Ask the human — don't guess |
 | Multiple good options | Pick the simplest; record why in an ADR |
 | Conflicting requirements | Surface the conflict to the human for resolution |
-| No precedent in the project | Check the Project Profile, then propose and ask |
+| No precedent in the project | Check the Project Definition, then propose and ask |
 | Time pressure | Make the reversible choice; create a follow-up task for the better solution |
 
 ## Revisiting Decisions
@@ -88,10 +80,10 @@ When revisiting, create a **new ADR** that supersedes the old one. Don't delete 
 
 ```
 Is this decision significant?
-  ├── No  → Just decide and move on
-  └── Yes → 
-       ├── List alternatives
-       ├── Apply criteria (consistency > simplicity > reversibility)
-       ├── Choose and record (ADR)
-       └── Communicate (PR, comments, Profile update)
+    ├── No → Just decide and move on
+    └── Yes →
+         ├── List alternatives
+         ├── Apply criteria (consistency > simplicity > reversibility)
+         ├── Choose and record (ADR)
+         └── Communicate (PR, comments, Project Definition update)
 ```

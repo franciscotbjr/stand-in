@@ -10,13 +10,11 @@
 ## Inputs
 
 - Specification documents (from Phase 3)
-- Project Definition (`impl/project-definition.md`)
+- Project Definition
 
 ## Activities
 
 ### 1. Implementation Order
-
-Follow this sequence for each unit of work:
 
 ```
 1. Data/Types     — Define the data structures, types, schemas
@@ -26,7 +24,7 @@ Follow this sequence for each unit of work:
 5. Documentation  — Inline docs, comments for non-obvious logic
 ```
 
-This order can vary by project type, but the principle is: **build from the inside out** — start with the data, then the logic, then the integration layer.
+Build from the inside out — start with the data, then the logic, then the integration layer.
 
 ### 2. Follow the Project Definition
 
@@ -39,22 +37,17 @@ Reference the Project Definition during implementation for:
 
 ### 3. Write Tests
 
-Testing strategy depends on the project (see Project Definition), but the methodology requires:
-
 - **At minimum:** Tests that verify the acceptance criteria from the spec
 - **Recommended:** Tests for edge cases and error scenarios listed in the spec
 - **If applicable:** Integration tests that verify the component works within the system
 
 ### 4. Commit Incrementally
 
-Make small, logical commits as you implement:
-
 - Each commit should leave the codebase in a working state
 - Group related changes together
+- Use the write-commit-message prompt for consistent commit messages
 
 ### 5. Handle Blockers During Implementation
-
-If you discover something unexpected:
 
 1. **Minor issue** — Note it and continue; address after the current unit
 2. **Spec gap** — Return to the Specify phase for the affected area
@@ -86,4 +79,4 @@ If you discover something unexpected:
 
 ## Next Phase
 
-After implementation is complete, proceed to [Phase 5: Verify](05-verify.md).
+After implementation is complete, proceed to Phase 5: Verify.
