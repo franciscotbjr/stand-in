@@ -6,7 +6,7 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-03-14
+- **Last Updated:** 2026-03-21
 - **Current Status:** Active development
 
 ## Active Work
@@ -40,6 +40,7 @@
 - **Tool discovery** — `inventory` crate for zero-boilerplate auto-registration of `#[mcp_tool]` functions
 - **MCP protocol** — Version 2025-03-26, server identity auto-derived from Cargo.toml via `env!()`
 - **Logging pattern** — Library instruments with `tracing` macros, application configures `tracing-subscriber` (SLF4J facade pattern)
+- **Crates.io publishing** — `CARGO_REGISTRY_TOKEN` env var (not `cargo login`), `cargo-release --workspace` handles dependency ordering, `impl/` and `ARCHITECTURE.md` excluded from packages
 
 ## Constraints & Reminders
 
@@ -51,6 +52,7 @@
 - No `#[from]` on error variants that expose external types — use manual From impls
 - Feature flags for optional functionality (stdio vs http transport)
 - One type per file, facade pattern in `mod.rs`
+- Publish order: `stand-in-macros` first, then `stand-in` (`stand-in-reference` is `publish = false`)
 
 ## History Index
 
