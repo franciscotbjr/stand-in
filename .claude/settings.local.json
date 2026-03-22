@@ -10,25 +10,7 @@
       "WebFetch(domain:github.com)",
       "Bash(gh api:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:api.github.com)",
-      "Bash(find D:/development/public/stand-in -path */tests/*.rs -o -path */tests.rs)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/overview.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/decision-framework.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/roles.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/01-analyze.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/02-plan.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/03-specify.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/04-implement.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/05-verify.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/resume-session.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/save-session.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/create-technical-spec.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/debug-issue.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/refactor-code.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/review-changes.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/update-documentation.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/write-commit-message.md)",
-      "Bash(curl -sL https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/prompts/operations/write-tests.md)"
+      "WebFetch(domain:api.github.com)"
     ]
   }
 }
