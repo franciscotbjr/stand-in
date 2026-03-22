@@ -10,22 +10,22 @@
 ## Inputs
 
 - Implemented code with tests (from Phase 4)
-- Project Definition — specifically the Quality Gates section
+- Project Definition — specifically the **Quality Gates** section
 - Specification documents — for acceptance criteria verification
 
 ## Activities
 
 ### 1. Run Quality Gates
 
-Execute every quality gate defined in the Project Definition:
+Execute every quality gate defined in the Project Definition. Common examples:
 
-```bash
-cargo fmt --check
-cargo clippy --all-features -- -D warnings
-cargo test --all-features
-cargo build --all-features
-cargo doc --all-features --no-deps
-```
+| Gate | Example Commands | Purpose |
+|------|-----------------|---------|
+| Linter | `eslint .`, `cargo clippy`, `ruff check .` | Code quality |
+| Formatter | `prettier --check .`, `cargo fmt --check`, `black --check .` | Consistent style |
+| Type checker | `tsc --noEmit`, `mypy .`, `cargo check` | Type safety |
+| Tests | `jest`, `cargo test`, `pytest` | Correctness |
+| Build | `npm run build`, `cargo build`, `go build ./...` | Compilation |
 
 **All gates must pass.** If any gate fails, fix the issues before proceeding.
 
@@ -35,10 +35,13 @@ Go through the specification's acceptance criteria one by one:
 
 - [ ] Criterion 1 — Verified by [test name / manual check]
 - [ ] Criterion 2 — Verified by [test name / manual check]
+- [ ] ...
 
 If any criterion is not met, return to the Implement phase.
 
 ### 3. Review Changes
+
+Perform a self-review:
 
 - **Diff review** — Are all changes intentional? Any debug code left?
 - **Convention check** — Does everything follow the Project Definition?
@@ -47,20 +50,26 @@ If any criterion is not met, return to the Implement phase.
 
 ### 4. Update Documentation
 
+Update as needed:
+
 - **README** — If the feature changes setup, usage, or API surface
 - **CHANGELOG** — Add entry for the change
 - **API docs** — If public interfaces changed
 - **Architecture docs** — If structure or patterns changed
+- **ADRs** — If new decisions were made during implementation
 
 ### 5. Prepare Delivery Artifact
 
-- **Write commit message** — Use the write-commit-message prompt
+Depending on the project:
+
+- **Write commit message**
 - **Create PR/MR** — With description referencing the spec
 - **Tag release** — If this completes a version milestone
+- **Deploy** — If the project has a deployment pipeline
 
 ## Outputs
 
-1. **All quality gates passing**
+1. **All quality gates passing** — Documented or evident from CI
 2. **Updated documentation** — README, CHANGELOG, API docs as needed
 3. **Clean delivery artifact** — Commit, PR, release tag, or deployment
 
@@ -81,6 +90,8 @@ If any criterion is not met, return to the Implement phase.
 
 ## After Verification
 
-- **More milestones remaining?** — Return to Phase 3: Specify for the next milestone
-- **New work unit?** — Return to Phase 1: Analyze
+The iteration is complete. Next steps:
+
+- **More milestones remaining?** — Return to [Phase 3: Specify](03-specify.md) for the next milestone
+- **New work unit?** — Return to [Phase 1: Analyze](01-analyze.md)
 - **Session ending?** — Use save-session to generate a session summary

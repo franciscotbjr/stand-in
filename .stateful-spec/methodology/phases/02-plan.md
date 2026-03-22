@@ -10,7 +10,7 @@
 ## Inputs
 
 - Analysis output (requirements, complexity, dependencies, open questions)
-- Project Definition
+- Project Definition (`templates/project/project-definition.md`)
 - Existing codebase architecture (if applicable)
 
 ## Activities
@@ -24,7 +24,7 @@ Define how the work fits into the system:
 - **What patterns apply?** — Reference the Project Definition's conventions section
 - **What changes to existing code?** — New files, modified files, deleted files
 
-For significant decisions, create an Architecture Decision Record.
+For significant decisions, use the Architecture Decision Record template.
 
 ### 2. Milestone Definition
 
@@ -42,6 +42,8 @@ Each milestone should:
 - Be small enough to complete in one session
 
 ### 3. Blocker Identification
+
+List anything that could prevent progress:
 
 | Blocker | Type | Resolution |
 |---------|------|------------|
@@ -81,4 +83,4 @@ For complex work, identify risks:
 
 ## Next Phase
 
-After planning is complete, proceed to Phase 3: Specify.
+After planning is complete, proceed to [Phase 3: Specify](03-specify.md).

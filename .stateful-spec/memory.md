@@ -6,7 +6,7 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-03-21
+- **Last Updated:** 2026-03-22
 - **Current Status:** Active development
 
 ## Active Work
@@ -41,6 +41,7 @@
 - **MCP protocol** — Version 2025-03-26, server identity auto-derived from Cargo.toml via `env!()`
 - **Logging pattern** — Library instruments with `tracing` macros, application configures `tracing-subscriber` (SLF4J facade pattern)
 - **Crates.io publishing** — `CARGO_REGISTRY_TOKEN` env var (not `cargo login`), `cargo-release --workspace` handles dependency ordering, `impl/` and `ARCHITECTURE.md` excluded from packages
+- **Methodology** — Migrated from "Design Source" to "Stateful Spec" (2026-03-22). Source: https://github.com/franciscotbjr/stateful-spec
 
 ## Constraints & Reminders
 

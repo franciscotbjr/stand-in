@@ -21,6 +21,10 @@ State the decision clearly:
 
 > "We need to decide [what] because [why]."
 
+Examples:
+- "We need to decide on the error handling pattern because multiple approaches are viable."
+- "We need to decide whether to use a monorepo or multi-repo because it affects CI and dependency management."
+
 ### Step 2: List Alternatives
 
 For each alternative, document:
@@ -43,7 +47,9 @@ Evaluate alternatives using these criteria (in order of priority):
 
 ### Step 4: Decide and Record
 
-Make the decision and record it. The record should capture:
+Make the decision and record it using the Architecture Decision Record template.
+
+The record should capture:
 - **What** was decided
 - **Why** this option was chosen
 - **What alternatives** were considered
@@ -57,6 +63,8 @@ Ensure the decision is visible:
 - Update the Project Definition if the decision changes conventions
 
 ## Handling Uncertainty
+
+When you're unsure:
 
 | Situation | Action |
 |-----------|--------|
@@ -80,10 +88,10 @@ When revisiting, create a **new ADR** that supersedes the old one. Don't delete 
 
 ```
 Is this decision significant?
-    ├── No → Just decide and move on
-    └── Yes →
-         ├── List alternatives
-         ├── Apply criteria (consistency > simplicity > reversibility)
-         ├── Choose and record (ADR)
-         └── Communicate (PR, comments, Project Definition update)
+  ├── No  → Just decide and move on
+  └── Yes →
+       ├── List alternatives
+       ├── Apply criteria (consistency > simplicity > reversibility)
+       ├── Choose and record (ADR)
+       └── Communicate (PR, comments, Profile update)
 ```

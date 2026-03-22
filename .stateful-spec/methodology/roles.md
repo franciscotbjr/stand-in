@@ -1,6 +1,6 @@
 # Roles: Human and AI Assistant
 
-This document defines the responsibilities, expectations, and boundaries for both the human developer and the AI assistant when working within the Design Source methodology.
+This document defines the responsibilities, expectations, and boundaries for both the human developer and the AI assistant when working within the Stateful Spec methodology.
 
 ## The Human Developer
 
@@ -69,9 +69,9 @@ The AI assistant should **NOT**:
 
 ### Session End
 
-1. Use the `save-session` prompt to generate a session summary
-2. Summary captures: decisions made, files changed, next steps, open blockers
-3. Human saves the summary for the next session
+1. Use the `save-session` prompt to save progress
+2. The AI updates `memory.md` with: decisions made, files changed, next steps, open blockers
+3. Human reviews and commits the updates
 
 ## Communication Guidelines
 
@@ -82,7 +82,7 @@ The AI assistant should **NOT**:
 - Reference specific files, functions, and line numbers
 - Provide rationale for non-obvious choices
 - State assumptions explicitly
-- Present selectable options when asking questions — only use open-ended free-text input when the answer cannot be anticipated
+- Present selectable options (numbered or bulleted choices) when asking questions — only use open-ended free-text input when the answer cannot be anticipated (e.g., project name, description)
 
 ### AI Should Not
 

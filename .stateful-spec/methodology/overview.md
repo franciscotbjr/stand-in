@@ -1,8 +1,10 @@
-# Design Source Methodology
+# Stateful Spec Methodology
 
 A structured, technology-agnostic framework for designing and building software with AI assistance.
 
 ## Philosophy
+
+**If you give an AI structured context and memory, it becomes a reliable collaborator instead of a stateless tool.**
 
 Software development with AI assistants works best when both human and AI operate within a shared, explicit process. Ad-hoc prompting produces inconsistent results. A methodology provides:
 
@@ -26,40 +28,40 @@ Every unit of work follows 5 phases:
 
 ```
 ┌─────────────────────────────────────────┐
-│ 1. ANALYZE                              │
-│ Understand requirements, break down     │
-│ complexity, identify unknowns           │
+│              1. ANALYZE                  │
+│  Understand requirements, break down    │
+│  complexity, identify unknowns          │
 └────────────────────┬────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────┐
-│ 2. PLAN                                 │
-│ Define architecture, structure,         │
-│ milestones, and blockers                │
+│               2. PLAN                    │
+│  Define architecture, structure,        │
+│  milestones, and blockers               │
 └────────────────────┬────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────┐
-│ 3. SPECIFY                              │
-│ Write technical refinement docs for     │
-│ each unit of work                       │
+│              3. SPECIFY                  │
+│  Write technical refinement docs for    │
+│  each unit of work                      │
 └────────────────────┬────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────┐
-│ 4. IMPLEMENT                            │
-│ Build, test, integrate following        │
-│ the specification and plan              │
+│             4. IMPLEMENT                 │
+│  Build, test, integrate following       │
+│  the specification and plan             │
 └────────────────────┬────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────┐
-│ 5. VERIFY                               │
-│ Run quality gates, update docs,         │
-│ prepare for delivery                    │
+│              5. VERIFY                   │
+│  Run quality gates, update docs,        │
+│  prepare for delivery                   │
 └─────────────────────────────────────────┘
 
-                Repeat for each work unit.
+         Repeat for each work unit.
 ```
 
 ## How It Works
@@ -67,8 +69,8 @@ Every unit of work follows 5 phases:
 ### For the Human
 
 1. **Fill the Project Definition** — Once per project, describe your tech stack, conventions, and quality gates
-2. **Use prompts to drive the AI** — Use native agent commands or copy prompts from `design-source/operations/`
-3. **Write specs for each work unit** — Use specification templates to describe what needs to be built
+2. **Use prompts to drive the AI** — Operation prompts are available as native agent commands (e.g., `/resume-session` in Claude Code)
+3. **Write specs for each work unit** — Use the specification templates to describe what needs to be built
 4. **Follow the phases** — Move through Analyze → Plan → Specify → Implement → Verify for each feature, bugfix, or refactoring
 
 ### For the AI Assistant
@@ -88,22 +90,31 @@ The methodology adapts to work of any size:
 | **Small** (bugfix, typo, config change) | Analyze + Implement + Verify (skip Plan and Specify) |
 | **Medium** (new feature, API endpoint) | All 5 phases, single iteration |
 | **Large** (new module, major refactor) | All 5 phases, multiple iterations with sub-tasks |
-| **Project bootstrap** | Use the `new-project` initialization prompt, then iterate |
+| **Project bootstrap** | Use the initialization prompt, then iterate |
 
 ## Project Memory Structure
 
-Projects using Design Source maintain a `design-source/` directory at the project root for tracking state across sessions and developers:
+Projects using Stateful Spec maintain a `.stateful-spec/` directory at the project root:
 
 ```
 your-project/
-└── design-source/
-    ├── memory.md                # Current context — AI reads this first
-    ├── project-definition.md    # Technology stack, conventions, quality gates
+└── .stateful-spec/
+    ├── memory.md              # Current context — AI reads this first
+    ├── project-definition.md  # Technology stack, conventions, quality gates
+    ├── methodology/           # Core process documentation
     └── history/
         ├── 001-feature-x.md
         ├── 002-bugfix-y.md
         └── ...
 ```
+
+### Why This Matters
+
+- **Multi-developer continuity** — Any developer can onboard an AI assistant by pointing it to `.stateful-spec/memory.md`
+- **Agent portability** — Works with any AI coding agent; switch agents without losing context
+- **Session persistence** — Work state survives across chat sessions
+- **Iteration tracking** — Each feature, bugfix, or refactor has its own file
+- **Version controlled** — The entire `.stateful-spec/` directory is committed to the repository
 
 ### Key Files
 

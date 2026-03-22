@@ -10,11 +10,13 @@
 ## Inputs
 
 - Plan output (architecture, milestones, blockers resolved)
-- Project Definition
+- Project Definition (`templates/project/project-definition.md`)
 
 ## Activities
 
 ### 1. Select the Right Template
+
+Choose the specification template that matches the type of work:
 
 | Work Type | Template | When to Use |
 |-----------|----------|-------------|
@@ -26,7 +28,7 @@
 
 ### 2. Fill the Specification
 
-For each unit of work, fill out the selected template. Key sections:
+For each unit of work within the current milestone, fill out the selected template. Key sections common to all specs:
 
 - **Description** — What is being built or changed
 - **Acceptance Criteria** — How to verify the work is complete
@@ -44,6 +46,10 @@ Before moving to implementation, verify:
 - Are **edge cases** and **error scenarios** covered?
 - Does it **align with the Project Definition** conventions?
 
+### 4. Store the Specification
+
+Save completed specs in a location defined by the project. The methodology does not prescribe where specs live — that's a project-level decision.
+
 ## Outputs
 
 1. **One or more filled specification documents** — Each covering a discrete unit of work
@@ -57,12 +63,6 @@ Before moving to implementation, verify:
 - [ ] Specs reference the Project Definition's conventions where applicable
 - [ ] No implementation ambiguity remains
 
-## Guidance: When to Skip or Shorten
-
-- **Trivial changes** (typos, config, dependency bumps) — Skip this phase entirely
-- **Simple bug fixes** (obvious cause) — A brief bugfix-spec with root cause and fix is sufficient
-- **Exploration/prototyping** — Write a minimal spec with the question you're trying to answer
-
 ## Anti-Patterns
 
 - **Spec as formality** — Writing a spec after the code is already written
@@ -70,6 +70,14 @@ Before moving to implementation, verify:
 - **Missing error cases** — Only specifying the happy path
 - **Detached from conventions** — Ignoring the Project Definition's patterns and naming rules
 
+## Guidance: When to Skip or Shorten
+
+Not every task needs a full spec:
+
+- **Trivial changes** (typos, config, dependency bumps) — Skip this phase entirely
+- **Simple bug fixes** (obvious cause) — A brief bugfix-spec with root cause and fix is sufficient
+- **Exploration/prototyping** — Write a minimal spec with the question you're trying to answer
+
 ## Next Phase
 
-After specifications are complete, proceed to Phase 4: Implement.
+After specifications are complete, proceed to [Phase 4: Implement](04-implement.md).

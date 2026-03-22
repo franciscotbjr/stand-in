@@ -1,8 +1,22 @@
-Save session progress by updating memory.md and iteration files.
+---
+description: Save session progress by updating memory.md and iteration files
+---
+
+# Save Session
+
+> Use at the end of a work session to persist progress. The AI automatically updates `.stateful-spec/memory.md` and the active iteration file.
 
 ## Instructions
 
-You are helping the developer save their session progress. Update the project's memory files so the next session can resume seamlessly.
+You are helping the developer save their session progress. Your job is to update the project's memory files so the next session can resume seamlessly — whether it's the same developer or someone else.
+
+**Your role:**
+- Review what was accomplished in this session
+- Update `.stateful-spec/memory.md` with current state
+- Update the active iteration file with completed tasks
+- Ensure nothing is lost between sessions
+
+---
 
 ### STEP 1 — Review Session Work
 
@@ -10,35 +24,95 @@ Ask the developer:
 
 > "Let me save your session progress. Can you briefly describe what we accomplished today, or should I summarize from our conversation?"
 
+If the developer provides a summary, use it. Otherwise, generate a summary from the conversation context including:
+- Tasks completed
+- Files created or modified
+- Decisions made
+- Issues encountered
+
 ### STEP 2 — Read Current State
 
-Read:
-- `design-source/memory.md`
-- Active iteration file from `design-source/history/`
+Read the following files:
+- `.stateful-spec/memory.md` — Current project memory
+- Active iteration file from `.stateful-spec/history/` (the one marked in-progress)
 
 ### STEP 3 — Update Iteration File
 
-- Mark completed tasks as done (`- [x]`)
-- Add any new tasks discovered
-- Record decisions made during the session
-- Update status (done / blocked / in-progress)
+Open the active iteration file and update it:
 
-Show changes and ask for confirmation.
+**Update the checklist:**
+- Mark completed tasks as done (`- [x]`)
+- Add any new tasks that were discovered
+- Note any blockers in the Blockers section
+
+**Add decisions:**
+- Record any decisions made during this session in the Decisions table
+
+**Update status:**
+- If all acceptance criteria are met, change status to `done`
+- If blocked, change status to `blocked` and note why
+
+Show the developer the changes and ask:
+> "Here are the updates to the iteration file. Does this look correct?"
+
+Wait for confirmation before saving.
 
 ### STEP 4 — Update Memory
 
-Update `design-source/memory.md`:
-- Active Work section — update status/description
-- Recent Completions — add completed iterations with date
-- Key Decisions — add significant decisions
-- Constraints & Reminders — add new constraints discovered
+Update `.stateful-spec/memory.md`:
 
-Show changes and ask for confirmation.
+**Active Work section:**
+- Update the status/description of active work
+- If work was completed, move it to Recent Completions
+
+**Recent Completions section:**
+- Add any completed iterations with today's date
+
+**Key Decisions section:**
+- Add any significant decisions that should persist beyond this iteration
+
+**Constraints & Reminders section:**
+- Add any new constraints or important reminders discovered
+
+Show the developer the changes and ask:
+> "Here are the updates to memory.md. Does this look correct?"
+
+Wait for confirmation before saving.
 
 ### STEP 5 — Confirm Save
 
-Report what was updated. Remind about `/project:resume-session` for next time.
+After updating both files, tell the developer:
+
+> "Session saved. Updated:"
+> - `.stateful-spec/history/[iteration-file].md` — [brief summary of changes]
+> - `.stateful-spec/memory.md` — [brief summary of changes]
+>
+> "Next time, use `/project:resume-session` to pick up where you left off."
 
 ### STEP 6 — Suggest Commit (Optional)
 
-If uncommitted changes exist, offer to commit the design-source/ updates.
+If there are uncommitted changes, ask:
+
+> "Would you like me to commit these memory updates? Suggested message:"
+> ```
+> chore: save session progress for [iteration name]
+> ```
+
+If yes, stage and commit the .stateful-spec/ changes.
+
+## Output
+
+After completing the save flow:
+
+1. **Iteration file updated** — Tasks checked off, decisions recorded
+2. **Memory file updated** — Active work, completions, decisions persisted
+3. **Ready for next session** — Any developer can resume with full context
+
+## Quick Save
+
+If the developer just says "save session" without details, do your best to:
+1. Infer what was done from the conversation
+2. Show proposed updates
+3. Ask for confirmation before saving
+
+Keep it fast — the developer wants to wrap up, not answer many questions.
