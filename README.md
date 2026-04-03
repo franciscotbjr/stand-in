@@ -5,6 +5,11 @@
 [![Docs.rs](https://docs.rs/stand-in/badge.svg)](https://docs.rs/stand-in)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<p align="center">
+  <img src="assets/stand_in_logo.svg" alt="stand-in logo" width="256" />
+</p>
+
+
 **A stand-in for your MCP server boilerplate.**
 
 You write with `stand-in`  declarative macros that look like your MCP server — tools, resources, prompts — but when the compiler rolls, the macros step aside and production-ready code takes their place. You never touch the generated code. You only ever interact with the stand-in.
