@@ -1,0 +1,358 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="aura" cx="50%" cy="37%" r="35%">
+      <stop offset="0%" stop-color="#00D2EB" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#DC6E1E" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#DC6E1E" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#32F0FF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#00D2EB" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="standBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#DC6E1E" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#DC6E1E" stop-opacity="0.35"/>
+    </linearGradient>
+
+    <linearGradient id="standHead" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8923A" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#DC6E1E" stop-opacity="0.5"/>
+    </linearGradient>
+
+    <linearGradient id="ferrisBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E88030"/>
+      <stop offset="100%" stop-color="#C05A10"/>
+    </linearGradient>
+
+    <linearGradient id="ferrisHead" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E88030"/>
+      <stop offset="100%" stop-color="#D06A18"/>
+    </linearGradient>
+
+    <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glowCyanSoft" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="shadow"/>
+      <feOffset dx="0" dy="3"/>
+      <feComposite in="SourceGraphic" in2="shadow" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- ============================================ -->
+  <!-- LAYER 1: Background aura & energy rays       -->
+  <!-- ============================================ -->
+  <circle cx="512" cy="370" r="360" fill="url(#aura)"/>
+
+  <!-- Radiating energy lines -->
+  <g opacity="0.12" stroke="#DC6E1E" stroke-width="1">
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(0 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(15 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(30 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(45 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(60 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(75 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(90 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(105 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(120 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(135 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(150 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(165 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(180 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(195 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(210 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(225 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(240 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(255 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(270 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(285 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(300 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(315 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(330 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="30" transform="rotate(345 512 370)"/>
+  </g>
+
+  <!-- Cyan inner rays -->
+  <g opacity="0.07" stroke="#00D2EB" stroke-width="1">
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(8 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(28 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(48 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(68 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(88 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(108 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(128 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(148 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(168 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(188 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(208 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(228 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(248 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(268 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(288 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(308 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(328 512 370)"/>
+    <line x1="512" y1="370" x2="512" y2="80" transform="rotate(348 512 370)"/>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LAYER 2: THE STAND                           -->
+  <!-- ============================================ -->
+  <g id="stand">
+    <!-- Stand torso -->
+    <path d="M512 195 L430 210 L380 180 L360 200 L375 250 L365 380 L385 480 L420 560 L445 580 L460 530 L512 500 L564 530 L579 580 L604 560 L639 480 L659 380 L649 250 L664 200 L644 180 L594 210 Z"
+          fill="url(#standBody)" stroke="#F5AA50" stroke-width="2" stroke-opacity="0.6"/>
+
+    <!-- Inner structural lines -->
+    <g stroke="#F5AA50" stroke-opacity="0.25" stroke-width="1" fill="none">
+      <path d="M430 210 L415 380 L440 500"/>
+      <path d="M594 210 L609 380 L584 500"/>
+      <path d="M512 195 L512 500"/>
+    </g>
+
+    <!-- Stand head -->
+    <path d="M512 205 L468 195 L458 160 L452 130 L460 100 L445 55 L468 90 L480 95 L512 85 L544 95 L556 90 L579 55 L564 100 L572 130 L566 160 L556 195 Z"
+          fill="url(#standHead)" stroke="#F5AA50" stroke-width="2" stroke-opacity="0.7"/>
+
+    <!-- Visor -->
+    <path d="M472 150 L480 125 L512 118 L544 125 L552 150 L545 165 L512 170 L479 165 Z"
+          fill="#64280A" fill-opacity="0.6" stroke="#F5AA50" stroke-width="1" stroke-opacity="0.5"/>
+
+    <!-- Stand eyes -->
+    <g filter="url(#glowCyanSoft)">
+      <ellipse cx="496" cy="144" rx="12" ry="11" fill="#00D2EB" opacity="0.95"/>
+      <ellipse cx="528" cy="144" rx="12" ry="11" fill="#00D2EB" opacity="0.95"/>
+    </g>
+    <ellipse cx="496" cy="144" rx="6" ry="5" fill="#FFFFFF" opacity="0.85"/>
+    <ellipse cx="528" cy="144" rx="6" ry="5" fill="#FFFFFF" opacity="0.85"/>
+
+    <!-- Arms -->
+    <g stroke="#DC6E1E" stroke-opacity="0.5" stroke-width="4" fill="none" stroke-linecap="round">
+      <path d="M370 210 Q310 230 240 290 Q210 315 195 325"/>
+      <path d="M654 210 Q714 230 784 290 Q814 315 829 325"/>
+    </g>
+
+    <!-- Hands -->
+    <path d="M200 310 L180 300 L165 315 L170 340 L185 350 L205 340 L215 325 Z"
+          fill="#DC6E1E" fill-opacity="0.5" stroke="#F5AA50" stroke-width="1.5" stroke-opacity="0.55"/>
+    <path d="M824 310 L844 300 L859 315 L854 340 L839 350 L819 340 L809 325 Z"
+          fill="#DC6E1E" fill-opacity="0.5" stroke="#F5AA50" stroke-width="1.5" stroke-opacity="0.55"/>
+
+    <!-- MCP streaming arrows - left hand (incoming) -->
+    <g stroke="#00D2EB" stroke-opacity="0.45" stroke-width="2">
+      <line x1="120" y1="310" x2="162" y2="315"/>
+      <line x1="120" y1="325" x2="162" y2="325"/>
+      <line x1="120" y1="340" x2="162" y2="335"/>
+    </g>
+    <g fill="#00D2EB" fill-opacity="0.5">
+      <polygon points="162,310 162,320 172,315"/>
+      <polygon points="162,320 162,330 172,325"/>
+      <polygon points="162,330 162,340 172,335"/>
+    </g>
+
+    <!-- MCP streaming arrows - right hand (outgoing) -->
+    <g stroke="#00D2EB" stroke-opacity="0.45" stroke-width="2">
+      <line x1="862" y1="315" x2="904" y2="310"/>
+      <line x1="862" y1="325" x2="904" y2="325"/>
+      <line x1="862" y1="335" x2="904" y2="340"/>
+    </g>
+    <g fill="#00D2EB" fill-opacity="0.5">
+      <polygon points="862,310 862,320 852,315"/>
+      <polygon points="862,320 862,330 852,325"/>
+      <polygon points="862,330 862,340 852,335"/>
+    </g>
+
+    <!-- Gears on chest (Rust reference) -->
+    <g opacity="0.4">
+      <!-- Left gear -->
+      <polygon points="485,264 497,268 501,280 497,292 485,296 473,292 469,280 473,268"
+               fill="#F5AA50" stroke="#F5AA50" stroke-width="1"/>
+      <polygon points="485,267 494,270 497,280 494,290 485,293 476,290 473,280 476,270"
+               fill="none" stroke="#DC6E1E" stroke-width="1"/>
+      <circle cx="485" cy="280" r="6" fill="#DC6E1E" fill-opacity="0.6"/>
+
+      <!-- Right gear -->
+      <polygon points="539,264 551,268 555,280 551,292 539,296 527,292 523,280 527,268"
+               fill="#F5AA50" stroke="#F5AA50" stroke-width="1"/>
+      <polygon points="539,267 548,270 551,280 548,290 539,293 530,290 527,280 530,270"
+               fill="none" stroke="#DC6E1E" stroke-width="1"/>
+      <circle cx="539" cy="280" r="6" fill="#DC6E1E" fill-opacity="0.6"/>
+
+      <!-- Center gear (cyan / MCP) -->
+      <polygon points="512,322 521,325 524,334 521,343 512,346 503,343 500,334 503,325"
+               fill="#00D2EB" fill-opacity="0.4" stroke="#00D2EB" stroke-width="1" stroke-opacity="0.5"/>
+      <circle cx="512" cy="334" r="4" fill="#00D2EB" fill-opacity="0.3"/>
+    </g>
+
+    <!-- MCP Node Network -->
+    <g stroke="#00D2EB" stroke-opacity="0.2" stroke-width="1" fill="none">
+      <line x1="512" y1="255" x2="485" y2="305"/>
+      <line x1="512" y1="255" x2="539" y2="305"/>
+      <line x1="485" y1="305" x2="539" y2="305"/>
+      <line x1="485" y1="305" x2="512" y2="365"/>
+      <line x1="539" y1="305" x2="512" y2="365"/>
+      <line x1="512" y1="365" x2="450" y2="380"/>
+      <line x1="512" y1="365" x2="574" y2="380"/>
+      <line x1="512" y1="255" x2="290" y2="265"/>
+      <line x1="512" y1="255" x2="734" y2="265"/>
+      <line x1="290" y1="265" x2="195" y2="325"/>
+      <line x1="734" y1="265" x2="829" y2="325"/>
+    </g>
+    <!-- Nodes -->
+    <g filter="url(#glowCyan)">
+      <circle cx="512" cy="255" r="5" fill="#00D2EB" opacity="0.7"/>
+      <circle cx="485" cy="305" r="5" fill="#00D2EB" opacity="0.7"/>
+      <circle cx="539" cy="305" r="5" fill="#00D2EB" opacity="0.7"/>
+      <circle cx="512" cy="365" r="5" fill="#00D2EB" opacity="0.7"/>
+      <circle cx="450" cy="380" r="4" fill="#00D2EB" opacity="0.6"/>
+      <circle cx="574" cy="380" r="4" fill="#00D2EB" opacity="0.6"/>
+      <circle cx="290" cy="265" r="4" fill="#00D2EB" opacity="0.5"/>
+      <circle cx="734" cy="265" r="4" fill="#00D2EB" opacity="0.5"/>
+      <circle cx="195" cy="325" r="4" fill="#00D2EB" opacity="0.5"/>
+      <circle cx="829" cy="325" r="4" fill="#00D2EB" opacity="0.5"/>
+    </g>
+    <!-- Node centers -->
+    <g fill="#FFFFFF" opacity="0.6">
+      <circle cx="512" cy="255" r="2.5"/>
+      <circle cx="485" cy="305" r="2.5"/>
+      <circle cx="539" cy="305" r="2.5"/>
+      <circle cx="512" cy="365" r="2.5"/>
+      <circle cx="450" cy="380" r="2"/>
+      <circle cx="574" cy="380" r="2"/>
+    </g>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LAYER 3: FERRIS (front, solid)               -->
+  <!-- ============================================ -->
+  <g id="ferris" filter="url(#softShadow)">
+    <!-- Ground shadow -->
+    <ellipse cx="512" cy="660" rx="55" ry="10" fill="#000000" opacity="0.1"/>
+
+    <!-- Body -->
+    <path d="M512 490 L462 505 L454 520 L460 600 L477 635 L492 650 L512 640 L532 650 L547 635 L564 600 L570 520 L562 505 Z"
+          fill="url(#ferrisBody)" stroke="#8C3C0A" stroke-width="3"/>
+
+    <!-- Belly highlight -->
+    <ellipse cx="512" cy="575" rx="28" ry="32" fill="#F5AA50" opacity="0.4"/>
+
+    <!-- Head -->
+    <path d="M512 500 L474 495 L470 470 L477 447 L490 437
+             L494 432 L477 395
+             L500 428 L512 435
+             L524 428 L547 395
+             L530 432 L534 437
+             L547 447 L553 470 L550 495 Z"
+          fill="url(#ferrisHead)" stroke="#8C3C0A" stroke-width="3"/>
+
+    <!-- Eyes -->
+    <ellipse cx="496" cy="460" rx="9" ry="11" fill="#FFFFFF"/>
+    <ellipse cx="528" cy="460" rx="9" ry="11" fill="#FFFFFF"/>
+    <!-- Pupils -->
+    <ellipse cx="498" cy="462" rx="5" ry="6" fill="#1E140F"/>
+    <ellipse cx="530" cy="462" rx="5" ry="6" fill="#1E140F"/>
+    <!-- Eye shine -->
+    <circle cx="495" cy="458" r="2.5" fill="#FFFFFF" opacity="0.85"/>
+    <circle cx="527" cy="458" r="2.5" fill="#FFFFFF" opacity="0.85"/>
+
+    <!-- Smile -->
+    <path d="M504 475 Q512 482 520 475" stroke="#8C3C0A" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Left claw -->
+    <path d="M454 530 L434 545 L417 535 L414 555 L430 570 L447 565 L457 555 Z"
+          fill="#F5AA50" stroke="#8C3C0A" stroke-width="2"/>
+
+    <!-- Right claw -->
+    <path d="M570 530 L590 545 L607 535 L610 555 L594 570 L577 565 L567 555 Z"
+          fill="#F5AA50" stroke="#8C3C0A" stroke-width="2"/>
+
+    <!-- Legs -->
+    <path d="M492 630 L488 658 L498 662 L505 638 Z" fill="#8C3C0A" stroke="#642805" stroke-width="1"/>
+    <path d="M532 630 L536 658 L526 662 L519 638 Z" fill="#8C3C0A" stroke="#642805" stroke-width="1"/>
+
+    <!-- Gear emblem on chest -->
+    <polygon points="512,534 520,537 523,545 520,553 512,556 504,553 501,545 504,537"
+             fill="#F5AA50" stroke="#8C3C0A" stroke-width="1.5"/>
+    <circle cx="512" cy="545" r="4.5" fill="#00D2EB" filter="url(#glowCyan)"/>
+    <circle cx="512" cy="545" r="2" fill="#FFFFFF" opacity="0.7"/>
+  </g>
+
+  <!-- Glow connecting Ferris to Stand -->
+  <ellipse cx="512" cy="490" rx="40" ry="20" fill="#00D2EB" opacity="0.08"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 4: ゴゴゴ menacing marks               -->
+  <!-- ============================================ -->
+  <g id="menacing" fill="#F5AA50" stroke="#C06818" stroke-width="1">
+    <!-- Left side marks -->
+    <g transform="translate(148,170) rotate(40)" opacity="0.55">
+      <path d="M-15,-24 L15,-24 L15,-16.5 L-9,-16.5 L-9,12 L10.5,12 L10.5,19.5 L-15,19.5 Z"/>
+    </g>
+    <g transform="translate(135,310) rotate(28)" opacity="0.45">
+      <path d="M-12.5,-20 L12.5,-20 L12.5,-13.75 L-7.5,-13.75 L-7.5,10 L8.75,10 L8.75,16.25 L-12.5,16.25 Z"/>
+    </g>
+    <g transform="translate(158,450) rotate(17)" opacity="0.38">
+      <path d="M-12,-19.2 L12,-19.2 L12,-13.2 L-7.2,-13.2 L-7.2,9.6 L8.4,9.6 L8.4,15.6 L-12,15.6 Z"/>
+    </g>
+    <g transform="translate(175,240) rotate(52)" opacity="0.42">
+      <path d="M-11,-17.6 L11,-17.6 L11,-12.1 L-6.6,-12.1 L-6.6,8.8 L7.7,8.8 L7.7,14.3 L-11,14.3 Z"/>
+    </g>
+
+    <!-- Right side marks -->
+    <g transform="translate(855,185) rotate(-34)" opacity="0.52">
+      <path d="M-14,-22.4 L14,-22.4 L14,-15.4 L-8.4,-15.4 L-8.4,11.2 L9.8,11.2 L9.8,18.2 L-14,18.2 Z"/>
+    </g>
+    <g transform="translate(878,300) rotate(-23)" opacity="0.45">
+      <path d="M-13,-20.8 L13,-20.8 L13,-14.3 L-7.8,-14.3 L-7.8,10.4 L9.1,10.4 L9.1,16.9 L-13,16.9 Z"/>
+    </g>
+    <g transform="translate(855,430) rotate(-28)" opacity="0.38">
+      <path d="M-11.5,-18.4 L11.5,-18.4 L11.5,-12.65 L-6.9,-12.65 L-6.9,9.2 L8.05,9.2 L8.05,14.95 L-11.5,14.95 Z"/>
+    </g>
+    <g transform="translate(838,240) rotate(-46)" opacity="0.42">
+      <path d="M-11,-17.6 L11,-17.6 L11,-12.1 L-6.6,-12.1 L-6.6,8.8 L7.7,8.8 L7.7,14.3 L-11,14.3 Z"/>
+    </g>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LAYER 5: Text                                -->
+  <!-- ============================================ -->
+  <g id="text-group">
+    <!-- Glitch offset layers -->
+    <text x="512" y="800" text-anchor="middle"
+          font-family="'DejaVu Sans Mono', 'Courier New', monospace" font-weight="bold" font-size="72"
+          fill="#00D2EB" opacity="0.35"
+          dx="-3" dy="-2">stand-in</text>
+    <text x="512" y="800" text-anchor="middle"
+          font-family="'DejaVu Sans Mono', 'Courier New', monospace" font-weight="bold" font-size="72"
+          fill="#DC6E1E" opacity="0.35"
+          dx="3" dy="2">stand-in</text>
+    <!-- Main text -->
+    <text x="512" y="800" text-anchor="middle"
+          font-family="'DejaVu Sans Mono', 'Courier New', monospace" font-weight="bold" font-size="72"
+          fill="#FFFFFF" opacity="0.95">stand-in</text>
+
+    <!-- Underline -->
+    <line x1="260" y1="810" x2="764" y2="810" stroke="#DC6E1E" stroke-width="3" opacity="0.7"/>
+
+    <!-- Subtitle -->
+    <text x="512" y="840" text-anchor="middle"
+          font-family="'DejaVu Sans Mono', 'Courier New', monospace" font-size="22"
+          fill="#00D2EB" opacity="0.75">MCP Server Abstraction for Rust</text>
+  </g>
+</svg>
