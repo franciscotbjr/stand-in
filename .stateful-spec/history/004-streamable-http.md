@@ -8,7 +8,7 @@
 - **Status:** done
 - **Created:** 2026-03-13
 - **Completed:** 2026-03-13
-- **Author:** Francisco Tomé Barros Jr
+- **Author:** Francisco Tarcizo Bomfim Jr
 
 ## Description
 

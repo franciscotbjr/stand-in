@@ -9,7 +9,15 @@ license = "MIT"
 repository = "https://github.com/franciscotbjr/stand-in"
 keywords = ["mcp", "ai", "llm", "agent", "server"]
 categories = ["web-programming::websocket", "web-programming::http-server", "artificial-intelligence"]
-exclude = ["impl/", "ARCHITECTURE.md"]
+exclude = [
+    ".claude/", 
+    ".github/", 
+    ".stateful-spec/", 
+    ".vscode/", 
+    "impl/", 
+    "AGENTS.md",
+    "ARCHITECTURE.md"
+    ]
 
 [workspace.dependencies]
 # Runtime

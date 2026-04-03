@@ -6,7 +6,7 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-03-22
+- **Last Updated:** 2026-04-03
 - **Current Status:** Active development
 
 ## Active Work
@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 007 | Stateful Spec Sync | chore | 2026-04-03 |
 | 006 | mcp_prompt Support | feature | 2026-03-14 |
 | 005 | Tracing & Banner | feature | 2026-03-14 |
 | 004 | Streamable HTTP | feature | 2026-03-13 |
@@ -41,7 +42,7 @@
 - **MCP protocol** — Version 2025-03-26, server identity auto-derived from Cargo.toml via `env!()`
 - **Logging pattern** — Library instruments with `tracing` macros, application configures `tracing-subscriber` (SLF4J facade pattern)
 - **Crates.io publishing** — `CARGO_REGISTRY_TOKEN` env var (not `cargo login`), `cargo-release --workspace` handles dependency ordering, `impl/` and `ARCHITECTURE.md` excluded from packages
-- **Methodology** — Migrated from "Design Source" to "Stateful Spec" (2026-03-22). Source: https://github.com/franciscotbjr/stateful-spec
+- **Methodology** — Migrated from "Design Source" to "Stateful Spec" (2026-03-22). Synced to latest upstream (2026-04-03). Source: https://github.com/franciscotbjr/stateful-spec
 
 ## Constraints & Reminders
 
@@ -61,6 +62,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 007 | Stateful Spec Sync | chore | done | `history/007-stateful-spec-sync.md` |
 | 006 | mcp_prompt Support | feature | done | `history/006-mcp-prompt.md` |
 | 005 | Tracing & Banner | feature | done | `history/005-tracing-and-banner.md` |
 | 004 | Streamable HTTP | feature | done | `history/004-streamable-http.md` |

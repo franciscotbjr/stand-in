@@ -10,7 +10,8 @@
 ## Inputs
 
 - Specification documents (from Phase 3)
-- Project Definition
+- Implementation plan (if created using `templates/implementation/implementation-plan.md`)
+- Project Definition (`templates/project/project-definition.md`)
 
 ## Activities
 
@@ -45,12 +46,15 @@ Testing strategy depends on the project (see Project Definition), but the method
 - **Recommended:** Tests for edge cases and error scenarios listed in the spec
 - **If applicable:** Integration tests that verify the component works within the system
 
+Use the `templates/implementation/test-plan.md` template for complex testing scenarios.
+
 ### 4. Commit Incrementally
 
 Make small, logical commits as you implement:
 
 - Each commit should leave the codebase in a working state
 - Group related changes together
+- Use the `prompts/operations/write-commit-message.md` prompt for consistent commit messages
 
 ### 5. Handle Blockers During Implementation
 
