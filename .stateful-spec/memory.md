@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 008 | README Logo | chore | 2026-04-03 |
 | 007 | Stateful Spec Sync | chore | 2026-04-03 |
 | 006 | mcp_prompt Support | feature | 2026-03-14 |
 | 005 | Tracing & Banner | feature | 2026-03-14 |
@@ -62,6 +63,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 008 | README Logo | chore | done | _(trivial — no iteration file)_ |
 | 007 | Stateful Spec Sync | chore | done | `history/007-stateful-spec-sync.md` |
 | 006 | mcp_prompt Support | feature | done | `history/006-mcp-prompt.md` |
 | 005 | Tracing & Banner | feature | done | `history/005-tracing-and-banner.md` |
