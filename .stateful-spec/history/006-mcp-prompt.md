@@ -4,7 +4,7 @@
 - **Status:** done
 - **Completed:** 2026-03-14
 - **Started:** 2026-03-14
-- **Author:** Francisco Tomé Barros Jr.
+- **Author:** Francisco Tarcizo Bomfim Jr.
 
 ## Goal
 

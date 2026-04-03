@@ -11,6 +11,7 @@
 
 - Plan output (architecture, milestones, blockers resolved)
 - Project Definition (`templates/project/project-definition.md`)
+- Specification templates from `templates/specification/`
 
 ## Activities
 
@@ -20,11 +21,11 @@ Choose the specification template that matches the type of work:
 
 | Work Type | Template | When to Use |
 |-----------|----------|-------------|
-| New feature | feature-spec | Any new capability being added |
-| API endpoint | endpoint-spec | REST, GraphQL, gRPC, or WebSocket endpoint |
-| UI/Module/Service | component-spec | Frontend component, backend module, or service |
-| Bug fix | bugfix-spec | Analyzing and fixing a defect |
-| Refactoring | refactor-spec | Restructuring code without changing behavior |
+| New feature | `feature-spec.md` | Any new capability being added |
+| API endpoint | `endpoint-spec.md` | REST, GraphQL, gRPC, or WebSocket endpoint |
+| UI/Module/Service | `component-spec.md` | Frontend component, backend module, or service |
+| Bug fix | `bugfix-spec.md` | Analyzing and fixing a defect |
+| Refactoring | `refactor-spec.md` | Restructuring code without changing behavior |
 
 ### 2. Fill the Specification
 
@@ -48,7 +49,13 @@ Before moving to implementation, verify:
 
 ### 4. Store the Specification
 
-Save completed specs in a location defined by the project. The methodology does not prescribe where specs live — that's a project-level decision.
+Save completed specs in a location defined by the project. Common patterns:
+
+- `docs/specs/` or `spec/` directory in the repo
+- Issue tracker (GitHub Issues, Jira, Linear)
+- Wiki or documentation system
+
+The methodology does not prescribe where specs live — that's a project-level decision.
 
 ## Outputs
 
@@ -75,7 +82,7 @@ Save completed specs in a location defined by the project. The methodology does 
 Not every task needs a full spec:
 
 - **Trivial changes** (typos, config, dependency bumps) — Skip this phase entirely
-- **Simple bug fixes** (obvious cause) — A brief bugfix-spec with root cause and fix is sufficient
+- **Simple bug fixes** (obvious cause) — A brief `bugfix-spec.md` with root cause and fix is sufficient
 - **Exploration/prototyping** — Write a minimal spec with the question you're trying to answer
 
 ## Next Phase

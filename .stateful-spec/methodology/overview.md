@@ -68,9 +68,9 @@ Every unit of work follows 5 phases:
 
 ### For the Human
 
-1. **Fill the Project Definition** — Once per project, describe your tech stack, conventions, and quality gates
-2. **Use prompts to drive the AI** — Operation prompts are available as native agent commands (e.g., `/resume-session` in Claude Code)
-3. **Write specs for each work unit** — Use the specification templates to describe what needs to be built
+1. **Fill the Project Definition** — Once per project, describe your tech stack, conventions, and quality gates using the `templates/project/project-definition.md` template (or copy a preset from `presets/`)
+2. **Use prompts to drive the AI** — Operation prompts are available as native agent commands (e.g., `/resume-session` in Claude Code, Windsurf, etc.) or in `.stateful-spec/operations/`
+3. **Write specs for each work unit** — Use the specification templates in `templates/specification/` to describe what needs to be built
 4. **Follow the phases** — Move through Analyze → Plan → Specify → Implement → Verify for each feature, bugfix, or refactoring
 
 ### For the AI Assistant
@@ -90,18 +90,18 @@ The methodology adapts to work of any size:
 | **Small** (bugfix, typo, config change) | Analyze + Implement + Verify (skip Plan and Specify) |
 | **Medium** (new feature, API endpoint) | All 5 phases, single iteration |
 | **Large** (new module, major refactor) | All 5 phases, multiple iterations with sub-tasks |
-| **Project bootstrap** | Use the initialization prompt, then iterate |
+| **Project bootstrap** | Use the `new-project` initialization prompt, then iterate |
 
 ## Project Memory Structure
 
-Projects using Stateful Spec maintain a `.stateful-spec/` directory at the project root:
+Projects using Stateful Spec maintain a `.stateful-spec/` directory at the project root for tracking state across sessions and developers:
 
 ```
 your-project/
 └── .stateful-spec/
     ├── memory.md              # Current context — AI reads this first
     ├── project-definition.md  # Technology stack, conventions, quality gates
-    ├── methodology/           # Core process documentation
+    ├── operations/            # Operation prompts (only if native agent commands aren't used)
     └── history/
         ├── 001-feature-x.md
         ├── 002-bugfix-y.md
@@ -111,9 +111,9 @@ your-project/
 ### Why This Matters
 
 - **Multi-developer continuity** — Any developer can onboard an AI assistant by pointing it to `.stateful-spec/memory.md`
-- **Agent portability** — Works with any AI coding agent; switch agents without losing context
-- **Session persistence** — Work state survives across chat sessions
-- **Iteration tracking** — Each feature, bugfix, or refactor has its own file
+- **Agent portability** — Works with any AI coding agent (Claude Code, Windsurf, Cursor, Codex, and others); switch agents without losing context
+- **Session persistence** — Work state survives across chat sessions without manual context restoration
+- **Iteration tracking** — Each feature, bugfix, or refactor has its own file with acceptance criteria and task checklists
 - **Version controlled** — The entire `.stateful-spec/` directory is committed to the repository
 
 ### Key Files
@@ -123,3 +123,35 @@ your-project/
 | `memory.md` | Current project state, active work, constraints, and history index. The AI's entry point. |
 | `project-definition.md` | Technology stack, conventions, quality gates. The source of truth for how to build. |
 | `history/NNN-name.md` | One file per iteration. Contains description, acceptance criteria, task checklist, decisions. |
+
+Use iteration files for **each work unit** (feature, bugfix, refactor, or substantive doc/methodology change), not only for the first task after onboarding — see `prompts/operations/resume-session.md` (direct-task entry) if the session did not start with the initialization wizard.
+
+The initialization prompts (`new-project.md`, `onboard-existing.md`) automatically create and maintain this structure.
+
+## Directory Structure
+
+```
+.stateful-spec/
+├── methodology/          # Core process documentation
+│   ├── overview.md       # This file
+│   ├── phases/           # Detailed guide for each phase
+│   ├── roles.md          # AI assistant role and expectations
+│   └── decision-framework.md
+├── prompts/              # LLM-ready prompts (copy-paste into any AI)
+│   ├── initialization/   # Start/resume projects
+│   ├── phase-transitions/# Move between phases
+│   └── operations/       # Common tasks (commit, docs, review, etc.)
+├── templates/            # User-fillable templates
+│   ├── project/          # Project Definition, memory template, ADR
+│   ├── specification/    # Feature, endpoint, component, bugfix, refactor specs
+│   └── implementation/   # Implementation plan, test plan, iteration tracking
+├── presets/              # Pre-filled Project Definitions for common stacks
+└── examples/             # Community-contributed applied examples
+```
+
+## Getting Started
+
+1. Read the [phase guides](phases/) to understand the workflow
+2. Use the [new-project prompt](../prompts/initialization/new-project.md) to bootstrap your project with an AI assistant — it will create the Project Definition and memory structure for you
+3. For existing projects, use the [onboard-existing prompt](../prompts/initialization/onboard-existing.md) to bring an AI up to speed
+4. Follow the iteration cycle for each unit of work, tracking progress in `.stateful-spec/history/`

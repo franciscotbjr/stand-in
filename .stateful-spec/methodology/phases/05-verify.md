@@ -41,7 +41,7 @@ If any criterion is not met, return to the Implement phase.
 
 ### 3. Review Changes
 
-Perform a self-review:
+Perform a self-review (or use the `prompts/operations/review-changes.md` prompt):
 
 - **Diff review** — Are all changes intentional? Any debug code left?
 - **Convention check** — Does everything follow the Project Definition?
@@ -50,7 +50,7 @@ Perform a self-review:
 
 ### 4. Update Documentation
 
-Update as needed:
+Use the `prompts/operations/update-documentation.md` prompt or manually update:
 
 - **README** — If the feature changes setup, usage, or API surface
 - **CHANGELOG** — Add entry for the change
@@ -62,7 +62,7 @@ Update as needed:
 
 Depending on the project:
 
-- **Write commit message**
+- **Write commit message** — Use `prompts/operations/write-commit-message.md`
 - **Create PR/MR** — With description referencing the spec
 - **Tag release** — If this completes a version milestone
 - **Deploy** — If the project has a deployment pipeline
@@ -94,4 +94,4 @@ The iteration is complete. Next steps:
 
 - **More milestones remaining?** — Return to [Phase 3: Specify](03-specify.md) for the next milestone
 - **New work unit?** — Return to [Phase 1: Analyze](01-analyze.md)
-- **Session ending?** — Use save-session to generate a session summary
+- **Session ending?** — Use `prompts/operations/save-session.md` to generate a session summary

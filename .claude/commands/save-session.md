@@ -36,6 +36,19 @@ Read the following files:
 - `.stateful-spec/memory.md` — Current project memory
 - Active iteration file from `.stateful-spec/history/` (the one marked in-progress)
 
+### STEP 2.5 — Fill Gaps (if needed)
+
+If substantial work was done in this session **without** a corresponding iteration file:
+
+1. **Preferred:** Create a retroactive iteration file using `templates/implementation/iteration.md`:
+   - Next `NNN` from existing `history/*.md` files
+   - New file: `.stateful-spec/history/NNN-[short-name].md`
+   - Fill in description, tasks completed, and decisions made
+   - Mark tasks as done since the work already happened
+2. **Fallback:** If the work is too small for a full iteration file, capture the key points directly in memory.md updates (Step 4)
+
+Ask the developer which approach they prefer if it's not obvious.
+
 ### STEP 3 — Update Iteration File
 
 Open the active iteration file and update it:
@@ -87,7 +100,7 @@ After updating both files, tell the developer:
 > - `.stateful-spec/history/[iteration-file].md` — [brief summary of changes]
 > - `.stateful-spec/memory.md` — [brief summary of changes]
 >
-> "Next time, use `/project:resume-session` to pick up where you left off."
+> "Next time, use `/resume-session` to pick up where you left off."
 
 ### STEP 6 — Suggest Commit (Optional)
 
