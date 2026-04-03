@@ -20,7 +20,8 @@
       "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/03-specify.md)",
       "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/04-implement.md)",
       "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/05-verify.md)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)"
     ]
   }
 }
