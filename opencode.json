@@ -1,0 +1,20 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "ARCHITECTURE.md",
+    ".stateful-spec/project-definition.md",
+    ".stateful-spec/methodology/decision-framework.md",
+    ".stateful-spec/methodology/roles.md",
+    ".stateful-spec/methodology/overview.md",
+    ".stateful-spec/methodology/phases/01-analyze.md",
+    ".stateful-spec/methodology/phases/02-plan.md",
+    ".stateful-spec/methodology/phases/03-specify.md",
+    ".stateful-spec/methodology/phases/04-implement.md",
+    ".stateful-spec/methodology/phases/05-verify.md"
+  ],
+  "permission": {
+    "edit": "allow",
+    "bash": "allow"
+  }
+}
