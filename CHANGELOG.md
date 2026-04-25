@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned
+
+1. **Resources** — `resources/list`, `resources/templates/list`, `resources/read`, `resources/subscribe`, `resources/unsubscribe`; `McpResource` trait, `ResourceRegistry`, `#[mcp_resource]` macro; `TextResourceContents`, `BlobResourceContents`
+2. **Content types** — expandir `Content` enum com `ImageContent`, `AudioContent`, `EmbeddedResource`
+3. **Tool annotations** — adicionar campo `annotations` (`ToolAnnotations`) em `ToolDefinition` (`title`, `destructiveHint`, `readOnlyHint`, `idempotentHint`, `openWorldHint`)
+4. **Server capabilities** — expandir `ServerCapabilities` com `resources`, `logging`, `completions`, `experimental`
+5. **Notifications** — `notifications/tools/list_changed`, `notifications/resources/list_changed`, `notifications/resources/updated`
+6. **Ping** — endpoint `ping` para health check
+7. **Completions** — `completion/complete` para autocomplete de argumentos
+8. **Logging** — `logging/setLevel`, `LoggingMessageNotification`
+9. **Sampling & Roots** — `sampling/createMessage`, `roots/list`
+
 ## [0.0.3] - 2026-03-14
 
 ### Added

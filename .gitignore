@@ -1,3 +1,5 @@
 /target
 
 Cargo.lock
+.openclaude-profile.json
+impl.md
