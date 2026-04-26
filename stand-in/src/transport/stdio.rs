@@ -58,6 +58,11 @@ impl Transport for StdioTransport {
             };
 
             let response = handler.handle(&request).await;
+
+            // Note: resource subscribe/unsubscribe dispatch returns success {},
+            // but no SSE sender is wired here because stdio is unidirectional
+            // request/response. Server-initiated notifications (SSE) are an
+            // HTTP transport feature only.
             let json = serde_json::to_string(&response)?;
             stdout.write_all(json.as_bytes()).await?;
             stdout.write_all(b"\n").await?;

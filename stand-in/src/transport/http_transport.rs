@@ -15,6 +15,7 @@ use tracing::{debug, info, warn};
 
 use crate::error::Result;
 use crate::protocol::{JsonRpcError, JsonRpcRequest, JsonRpcResponse};
+use crate::resource::{SubscribeParams, UnsubscribeParams};
 use crate::server::RequestHandler;
 
 use super::Transport;
@@ -158,6 +159,40 @@ async fn handle_post(
 
     // Dispatch the request
     let response = state.handler.handle(&request).await;
+
+    // Wire up resource subscriptions on the transport layer
+    if response.error.is_none() {
+        match request.method.as_str() {
+            "resources/subscribe" => {
+                if let (Some(sid), Some(params)) = (&session_id, &request.params)
+                    && let Ok(sub_params) =
+                        serde_json::from_value::<SubscribeParams>(params.clone())
+                    && let Some(sender) = state
+                        .sessions
+                        .with_session(sid, |s| s.notification_tx())
+                        .await
+                {
+                    state
+                        .handler
+                        .wire_resource_subscription(&sub_params.uri, sid, sender)
+                        .await;
+                }
+            }
+            "resources/unsubscribe" => {
+                if let Some(sid) = &session_id
+                    && let Some(params) = &request.params
+                    && let Ok(unsub_params) =
+                        serde_json::from_value::<UnsubscribeParams>(params.clone())
+                {
+                    state
+                        .handler
+                        .wire_resource_unsubscribe(&unsub_params.uri, sid)
+                        .await;
+                }
+            }
+            _ => {}
+        }
+    }
 
     // On successful initialize, create a session
     let mut response_headers = HeaderMap::new();

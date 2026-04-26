@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::{PromptsCapability, ToolsCapability};
+use super::{PromptsCapability, ResourcesCapability, ToolsCapability};
 
 /// Top-level capability advertisement for an MCP server.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -14,6 +14,10 @@ pub struct ServerCapabilities {
     /// Prompts capability.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub prompts: Option<PromptsCapability>,
+
+    /// Resources capability.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub resources: Option<ResourcesCapability>,
 }
 
 impl ServerCapabilities {
@@ -22,6 +26,7 @@ impl ServerCapabilities {
         Self {
             tools: None,
             prompts: None,
+            resources: None,
         }
     }
 
@@ -34,6 +39,12 @@ impl ServerCapabilities {
     /// Advertise prompt support.
     pub fn with_prompts(mut self, prompts: PromptsCapability) -> Self {
         self.prompts = Some(prompts);
+        self
+    }
+
+    /// Advertise resource support.
+    pub fn with_resources(mut self, resources: ResourcesCapability) -> Self {
+        self.resources = Some(resources);
         self
     }
 }
@@ -78,5 +89,17 @@ mod tests {
         let json = serde_json::to_value(&caps).unwrap();
         assert!(json.get("tools").is_some());
         assert!(json.get("prompts").is_some());
+    }
+
+    #[test]
+    fn test_capabilities_with_resources() {
+        let caps = ServerCapabilities::new().with_resources(ResourcesCapability {
+            subscribe: Some(true),
+            list_changed: Some(true),
+        });
+        let json = serde_json::to_value(&caps).unwrap();
+        assert!(json.get("resources").is_some());
+        assert_eq!(json["resources"]["subscribe"], true);
+        assert_eq!(json["resources"]["listChanged"], true);
     }
 }

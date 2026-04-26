@@ -16,6 +16,15 @@ pub struct JsonRpcNotification {
     pub params: Option<serde_json::Value>,
 }
 
+/// Well-known MCP notification method names.
+pub mod notification_methods {
+    /// `notifications/resources/updated` — a resource has changed.
+    pub const RESOURCES_UPDATED: &str = "notifications/resources/updated";
+
+    /// `notifications/resources/list_changed` — the resource list has changed.
+    pub const RESOURCES_LIST_CHANGED: &str = "notifications/resources/list_changed";
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

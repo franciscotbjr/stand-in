@@ -6,7 +6,7 @@
 
 - **Project:** stand-in
 - **Description:** A stand-in for your MCP server boilerplate — declarative macros that generate production-ready MCP server code at compile time
-- **Last Updated:** 2026-04-03
+- **Last Updated:** 2026-04-25
 - **Current Status:** Active development
 
 ## Active Work
@@ -21,6 +21,7 @@
 
 | # | Name | Type | Completed |
 |---|------|------|-----------|
+| 009 | Resources Support | feature | 2026-04-25 |
 | 008 | README Logo | chore | 2026-04-03 |
 | 007 | Stateful Spec Sync | chore | 2026-04-03 |
 | 006 | mcp_prompt Support | feature | 2026-03-14 |
@@ -63,6 +64,7 @@
 
 | # | Name | Type | Status | File |
 |---|------|------|--------|------|
+| 009 | Resources Support | feature | done | `history/009-resources.md` |
 | 008 | README Logo | chore | done | _(trivial — no iteration file)_ |
 | 007 | Stateful Spec Sync | chore | done | `history/007-stateful-spec-sync.md` |
 | 006 | mcp_prompt Support | feature | done | `history/006-mcp-prompt.md` |

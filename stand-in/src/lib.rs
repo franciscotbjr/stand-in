@@ -30,6 +30,7 @@
 pub mod error;
 pub mod prompt;
 pub mod protocol;
+pub mod resource;
 pub mod server;
 pub mod tool;
 pub mod transport;
@@ -41,9 +42,14 @@ pub mod prelude {
     pub use crate::error::{Error, Result};
     pub use crate::prompt::{Prompt, PromptMessage};
     pub use crate::protocol::{JsonRpcError, JsonRpcNotification, JsonRpcRequest, JsonRpcResponse};
+    pub use crate::resource::{
+        ListResourceTemplatesResult, ListResourcesResult, McpResource, ReadResourceParams,
+        ReadResourceResult, Resource, ResourceAnnotations, ResourceContents, ResourceRegistry,
+        ResourceTemplate, SubscribeParams, UnsubscribeParams,
+    };
     pub use crate::server::{
-        ClientInfo, InitializeParams, InitializeResult, RequestHandler, ServerCapabilities,
-        ServerInfo, ToolsCapability,
+        ClientInfo, InitializeParams, InitializeResult, RequestHandler, ResourcesCapability,
+        ServerCapabilities, ServerInfo, ToolsCapability,
     };
     pub use crate::tool::{
         CallToolParams, CallToolResult, Content, InputSchema, ListToolsResult, McpTool,

@@ -15,6 +15,7 @@ stand-in-macros.workspace = true
 tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+base64.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
 tracing.workspace = true
@@ -30,6 +31,9 @@ uuid = { workspace = true, optional = true }
 default = ["stdio"]
 stdio = []
 http = ["dep:axum", "dep:tower-http", "dep:tokio-stream", "dep:uuid"]
+
+[[example]]
+name = "resource_server"
 
 [[example]]
 name = "http_server"
