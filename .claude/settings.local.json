@@ -12,18 +12,9 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:api.github.com)",
       "Bash(grep -E \"\\\\.md$\")",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/overview.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/decision-framework.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/roles.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/01-analyze.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/02-plan.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/03-specify.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/04-implement.md)",
-      "Bash(curl -s https://raw.githubusercontent.com/franciscotbjr/stateful-spec/main/methodology/phases/05-verify.md)",
       "Bash(git add:*)",
       "Bash(git commit -m ':*)",
-      "Bash(git status:*)",
-      "Bash(xargs grep:*)"
+      "Bash(git status:*)"
     ]
   }
 }
