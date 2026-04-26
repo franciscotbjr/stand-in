@@ -33,6 +33,10 @@ stdio = []
 http = ["dep:axum", "dep:tower-http", "dep:tokio-stream", "dep:uuid"]
 
 [[example]]
+name = "all_features"
+required-features = ["http"]
+
+[[example]]
 name = "resource_server"
 
 [[example]]
