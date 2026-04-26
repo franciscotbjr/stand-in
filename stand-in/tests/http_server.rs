@@ -46,7 +46,7 @@ async fn write_greeting(name: String, style: Option<String>) -> Result<Prompt> {
     mime_type = "application/json"
 )]
 async fn test_version() -> Result<String> {
-    Ok(serde_json::json!({"version": "0.0.3"}).to_string())
+    Ok(serde_json::json!({"version": "0.0.4"}).to_string())
 }
 
 #[mcp_resource(

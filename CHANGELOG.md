@@ -9,15 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Planned
 
-1. **Resources** — `resources/list`, `resources/templates/list`, `resources/read`, `resources/subscribe`, `resources/unsubscribe`; `McpResource` trait, `ResourceRegistry`, `#[mcp_resource]` macro; `TextResourceContents`, `BlobResourceContents` — see 0.0.4 preview below
-2. **Content types** — expandir `Content` enum com `ImageContent`, `AudioContent`, `EmbeddedResource`
-3. **Tool annotations** — adicionar campo `annotations` (`ToolAnnotations`) em `ToolDefinition` (`title`, `destructiveHint`, `readOnlyHint`, `idempotentHint`, `openWorldHint`)
-4. **Server capabilities** — expandir `ServerCapabilities` com `logging`, `completions`, `experimental`
-5. **Notifications** — `notifications/tools/list_changed`, `notifications/resources/updated`
-6. **Ping** — endpoint `ping` para health check
-7. **Completions** — `completion/complete` para autocomplete de argumentos
-8. **Logging** — `logging/setLevel`, `LoggingMessageNotification`
-9. **Sampling & Roots** — `sampling/createMessage`, `roots/list`
+1. **Content types** — expandir `Content` enum com `ImageContent`, `AudioContent`, `EmbeddedResource`
+2. **Tool annotations** — adicionar campo `annotations` (`ToolAnnotations`) em `ToolDefinition` (`title`, `destructiveHint`, `readOnlyHint`, `idempotentHint`, `openWorldHint`)
+3. **Server capabilities** — expandir `ServerCapabilities` com `logging`, `completions`, `experimental`
+4. **Notifications** — `notifications/tools/list_changed`, `notifications/resources/updated`
+5. **Ping** — endpoint `ping` para health check
+6. **Completions** — `completion/complete` para autocomplete de argumentos
+7. **Logging** — `logging/setLevel`, `LoggingMessageNotification`
+8. **Sampling & Roots** — `sampling/createMessage`, `roots/list`
 
 ## [0.0.4] — 2026-04-25
 
@@ -27,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detects concrete resources (fixed URI) vs template resources (URI with `{param}`)
   - Infers parameters from function signature; `{param}` in URI become function arguments
   - Generates `McpResource` trait implementation and registers via `inventory`
-  - Return type `Result<String>` auto-wrapped as `TextResourceContents`
+  - Return type `Result<String>` auto-wrapped as `TextResourceContents`, `Result<Vec<u8>>` as `BlobResourceContents` (base64-encoded)
   - Optional `name`, `description`, and `mime_type` attributes
 - **`resources/list`** dispatch in `RequestHandler` — returns all concrete resources
 - **`resources/templates/list`** dispatch — returns all template resources
@@ -40,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resource types: `Resource`, `ResourceTemplate`, `ResourceContents` (Text/Blob), `ResourceAnnotations`
 - Resource types re-exported from `stand_in::prelude`
 - `tokio sync` feature enabled for `RwLock` and `broadcast::Sender` in resource subsystem
+- **`examples/resource_server.rs`** — demonstrates 2 concrete + 1 template resources over stdio
+- **`examples/all_features.rs`** — single HTTP server demonstrating all macros (tools, prompts, resources) with full curl documentation
 
 ## [0.0.3] - 2026-03-14
 
