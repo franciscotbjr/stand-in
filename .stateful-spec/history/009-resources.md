@@ -267,5 +267,20 @@ Documentation updates:
 - **Pattern reference:** Iteration 006 (mcp_prompt), `stand-in/src/prompt/`, `stand-in/src/tool/`
 - **MCP spec:** Protocol version 2025-03-26, resources section
 - **PR/MR:** —
-- **Commits:** —
+- **Commits:** `b9ecbd0` (implementation), `73b6d46` (all_features example)
 - **Related Issues:** —
+
+## Post-Implementation Notes
+
+- **C1 (fixed):** Return-type detection implemented — `is_return_type_vec_u8()` inspects `ReturnType` via `syn`. `Result<Vec<u8>>` → `BlobResourceContents` with base64 encoding via new `base64` dependency.
+- **C2 (fixed):** `uritemplate` dependency removed from spec/plan — simple `{param}` split-by-`/` used. ARCHITECTURE.md documents the rationale.
+- **S1 (fixed):** `match_template_params()` extracted as public utility in `resource_registry.rs`. Macro generates a call to it instead of inlining 9 lines of splitting code.
+- **S2 (fixed):** `test_notify_with_contents_sends_correct_json` and `test_notify_with_contents_blob` added.
+- **S3 (fixed):** `impl Default for ConcrRes` moved adjacent to struct definition.
+- **W1 (fixed):** Three HTTP resource integration tests added (`test_resources_list_http`, `test_resources_read_http`, `test_resources_subscribe_notify_http`).
+- **W2 (fixed):** `test_resources_unknown_method` added to stdio tests.
+- **W3 (addressed):** Macro compile tests deferred to integration testing; iteration doc updated.
+- **W4 (fixed):** `notification_methods` module with `RESOURCES_UPDATED` and `RESOURCES_LIST_CHANGED` constants added to `protocol/notification.rs`.
+- **W5 (fixed):** Comment added in `stdio.rs` noting SSE notifications are HTTP-only.
+- **Example:** `all_features` example created demonstrating tools, prompts, and resources in a single HTTP server.
+- **Test count:** 193 tests pass (154 lib + 16 HTTP + 11 stdio + 11 macros + 1 doctest).
