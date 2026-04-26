@@ -9,6 +9,7 @@
 use proc_macro::TokenStream;
 
 mod mcp_prompt;
+mod mcp_resource;
 mod mcp_server;
 mod mcp_tool;
 mod schema;
@@ -63,9 +64,8 @@ pub fn mcp_tool(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// }
 /// ```
 #[proc_macro_attribute]
-pub fn mcp_resource(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    // TODO: Implement resource macro
-    item
+pub fn mcp_resource(attr: TokenStream, item: TokenStream) -> TokenStream {
+    mcp_resource::expand(attr.into(), item.into()).into()
 }
 
 /// Marks an async function as an MCP prompt template.

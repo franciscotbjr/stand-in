@@ -194,7 +194,7 @@ cargo doc --all-features --no-deps
 - **Target Environment:** crates.io
 - **CI/CD:** GitHub Actions
 - **Branch Strategy:** main + feature branches
-- **Versioning:** Workspace-level version (currently 0.0.3)
+- **Versioning:** Workspace-level version (currently 0.0.4)
 
 ## Constraints & Non-Negotiables
 

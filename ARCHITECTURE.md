@@ -23,6 +23,20 @@ stand-in/src/
 │   ├── tool_trait.rs   # McpTool trait
 │   ├── tool_registry.rs # ToolRegistry
 │   └── tool_factory.rs # ToolFactory (inventory integration)
+├── resource/           # MCP resource abstraction
+│   ├── resource_trait.rs   # McpResource trait
+│   ├── resource_registry.rs # ResourceRegistry
+│   ├── resource_factory.rs # ResourceFactory (inventory integration)
+│   ├── resource_definition.rs # Resource
+│   ├── resource_template.rs  # ResourceTemplate
+│   ├── resource_contents.rs  # ResourceContents (text/blob)
+│   ├── resource_annotations.rs # ResourceAnnotations
+│   ├── read_resource_params.rs  # ReadResourceParams
+│   ├── read_resource_result.rs  # ReadResourceResult
+│   ├── list_resources_result.rs # ListResourcesResult
+│   ├── list_resource_templates_result.rs # ListResourceTemplatesResult
+│   ├── subscribe_params.rs  # SubscribeParams
+│   └── unsubscribe_params.rs # UnsubscribeParams
 ├── server/             # MCP server types + dispatch
 │   ├── server_capabilities.rs # ServerCapabilities
 │   ├── tools_capability.rs    # ToolsCapability
@@ -43,6 +57,8 @@ stand-in-macros/src/
 ├── lib.rs              # Proc macro entry points
 ├── mcp_tool.rs         # #[mcp_tool] expansion
 ├── mcp_server.rs       # #[mcp_server] expansion
+├── mcp_prompt.rs       # #[mcp_prompt] expansion
+├── mcp_resource.rs     # #[mcp_resource] expansion
 └── schema.rs           # Rust type → JSON Schema inference
 ```
 
@@ -88,6 +104,20 @@ The `#[mcp_server]` macro generates both `serve(transport)` (generic) and `serve
 **Decision:** In-memory `SessionStore` using `Arc<RwLock<HashMap<String, Session>>>`. Sessions are created on successful `initialize`, validated on every subsequent request, and removed on `DELETE /mcp`. UUIDs generated via the `uuid` crate.
 
 **Rationale:** Simple, sufficient for single-process servers. Distributed session stores can be added later without changing the handler logic.
+
+### Resources
+
+**Decision:** Resources follow the same pattern as tools and prompts: `McpResource` trait, `ResourceRegistry`, `ResourceFactory` with `inventory::submit!`. Both concrete resources (fixed URI) and template resources (URI with `{param}` placeholders) are supported.
+
+**How it works:**
+1. `#[mcp_resource(uri, name, description, mime_type)]` declares a resource
+2. If the URI contains `{param}` placeholders, it's a template resource; function parameters become template variables
+3. The macro detects the return type (`Result<String>` → `TextResourceContents`)
+4. `resources/list` returns concrete resources; `resources/templates/list` returns template resources
+5. `resources/read` matches URIs: exact match on concrete, template pattern match on templates
+6. `resources/subscribe` and `resources/unsubscribe` manage SSE notification subscriptions via `ResourceRegistry`
+
+**Rationale:** Mirrors the pattern established by tools and prompts for consistency. Template matching uses simple `{param}` substring detection split by `/` segments — sufficient for 95% of use cases without an RFC 6570 dependency.
 
 ## Error Handling
 

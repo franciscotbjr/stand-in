@@ -144,3 +144,207 @@ fn test_unknown_tool_error() {
     drop(child.stdin.take());
     child.wait().unwrap();
 }
+
+#[test]
+fn test_resources_list() {
+    let mut child = spawn_server();
+
+    // 1. Initialize
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    // 2. resources/list
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/list"}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    let resources = json["result"]["resources"].as_array().unwrap();
+    assert_eq!(resources.len(), 2);
+    let uris: Vec<&str> = resources
+        .iter()
+        .map(|r| r["uri"].as_str().unwrap())
+        .collect();
+    assert!(uris.contains(&"info://version"));
+    assert!(uris.contains(&"config://settings"));
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}
+
+#[test]
+fn test_resources_templates_list() {
+    let mut child = spawn_server();
+
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/templates/list"}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    let templates = json["result"]["resourceTemplates"].as_array().unwrap();
+    assert_eq!(templates.len(), 1);
+    assert_eq!(
+        templates[0]["uriTemplate"].as_str().unwrap(),
+        "docs://{topic}/readme"
+    );
+    assert_eq!(templates[0]["name"].as_str().unwrap(), "Documentation");
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}
+
+#[test]
+fn test_resources_read_concrete() {
+    let mut child = spawn_server();
+
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/read","params":{"uri":"info://version"}}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    assert!(json["error"].is_null());
+    let contents = json["result"]["contents"].as_array().unwrap();
+    assert_eq!(contents.len(), 1);
+    assert_eq!(contents[0]["uri"].as_str().unwrap(), "info://version");
+    assert!(contents[0]["text"].as_str().unwrap().contains("version"));
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}
+
+#[test]
+fn test_resources_read_template() {
+    let mut child = spawn_server();
+
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/read","params":{"uri":"docs://rust/readme"}}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    assert!(json["error"].is_null());
+    let contents = json["result"]["contents"].as_array().unwrap();
+    assert_eq!(contents.len(), 1);
+    assert_eq!(contents[0]["uri"].as_str().unwrap(), "docs://rust/readme");
+    let text = contents[0]["text"].as_str().unwrap();
+    assert!(text.contains("# rust"));
+    assert!(text.contains("Documentation for rust"));
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}
+
+#[test]
+fn test_resources_read_unknown() {
+    let mut child = spawn_server();
+
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/read","params":{"uri":"file:///nonexistent"}}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    assert!(json["error"].is_object());
+    assert_eq!(json["error"]["code"], -32601);
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}
+
+#[test]
+fn test_resources_subscribe_unsubscribe() {
+    let mut child = spawn_server();
+
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    // Subscribe
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/subscribe","params":{"uri":"info://version"}}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    assert!(json["error"].is_null());
+
+    // Unsubscribe
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":4,"method":"resources/unsubscribe","params":{"uri":"info://version"}}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    assert!(json["error"].is_null());
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}
+
+#[test]
+fn test_resources_unknown_method() {
+    let mut child = spawn_server();
+
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}"#,
+    );
+    let _ = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":2,"method":"notifications/initialized"}"#,
+    );
+
+    let resp = send_and_receive(
+        &mut child,
+        r#"{"jsonrpc":"2.0","id":3,"method":"resources/invalid"}"#,
+    );
+    let json: serde_json::Value = serde_json::from_str(resp.trim()).unwrap();
+    assert!(json["error"].is_object());
+    assert_eq!(json["error"]["code"], -32601);
+
+    drop(child.stdin.take());
+    child.wait().unwrap();
+}

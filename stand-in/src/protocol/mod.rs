@@ -7,5 +7,6 @@ mod response;
 
 pub use error::JsonRpcError;
 pub use notification::JsonRpcNotification;
+pub use notification::notification_methods;
 pub use request::JsonRpcRequest;
 pub use response::JsonRpcResponse;

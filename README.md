@@ -16,7 +16,7 @@ You write with `stand-in`  declarative macros that look like your MCP server —
 
 ## Status
 
-🚧 **Early Development** — Core macros (`#[mcp_tool]`, `#[mcp_server]`, `#[mcp_prompt]`) and both transports (Stdio, Streamable HTTP) are implemented. Resources are not yet available.
+🚧 **Early Development** — Core macros (`#[mcp_tool]`, `#[mcp_server]`, `#[mcp_prompt]`, `#[mcp_resource]`) and both transports (Stdio, Streamable HTTP) are implemented. APIs may change before 1.0.
 
 ## Installation
 
@@ -24,7 +24,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-stand-in = "0.0.3"
+stand-in = "0.0.4"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 ```
 
@@ -85,6 +85,35 @@ async fn summarize(document: String, audience: Option<String>) -> Result<Prompt>
 
 `Option<T>` parameters become optional arguments in the MCP prompt definition. Required parameters stay required. The return type is always `Result<Prompt>`.
 
+### Adding a Resource
+
+```rust
+use stand_in::prelude::*;
+
+/// Concrete resource — fixed URI, no parameters.
+#[mcp_resource(
+    uri = "info://version",
+    name = "Server Version",
+    mime_type = "application/json"
+)]
+async fn server_version() -> Result<String> {
+    Ok(serde_json::json!({"version": "1.0.0"}).to_string())
+}
+
+/// Template resource — URI template with {param}, extracted at read time.
+#[mcp_resource(
+    uri = "docs://{topic}/readme",
+    name = "Documentation",
+    description = "Documentation for a given topic",
+    mime_type = "text/markdown"
+)]
+async fn docs_readme(topic: String) -> Result<String> {
+    Ok(format!("# {topic}\n\nDocumentation for {topic}."))
+}
+```
+
+Resources with `{param}` in the URI become template resources. Concrete resources (no `{param}`) appear in `resources/list`; templates appear in `resources/templates/list`. Return `Result<Vec<u8>>` for binary data — the macro auto-detects the return type and produces base64-encoded `BlobResourceContents`.
+
 ## Philosophy
 
 Inspired by frameworks like Spring Boot, `stand-in` follows a simple principle: **convention eliminates configuration**. If the shape of your code already tells us what you mean, you shouldn't have to say it twice.
@@ -121,7 +150,7 @@ stand-in/
 - **`#[mcp_server]`** — Wire everything together. Generates initialization, capability negotiation, and dispatch.
 - **Transports** — Stdio (default) and Streamable HTTP (feature-gated). Extensible via the `Transport` trait.
 - **Async-first** — Built on `tokio`. Every handler is `async fn`.
-- **`#[mcp_resource]`** — _(not yet implemented)_
+- **`#[mcp_resource]`** — Expose data as MCP resources (concrete URIs or URI templates with `{param}`). Return `Result<String>` for text content or `Result<Vec<u8>>` for base64-encoded blobs.
 
 ## Example: A More Complete Server
 
@@ -154,6 +183,15 @@ async fn summarize_project(project_id: String, format: Option<String>) -> Result
     Ok(Prompt::user(format!(
         "Summarize project {project_id} in a {level} format."
     )))
+}
+
+#[mcp_resource(
+    uri = "project://{project_id}/overview",
+    name = "Project Overview",
+    mime_type = "application/json"
+)]
+async fn project_overview(project_id: String) -> Result<String> {
+    Ok(serde_json::json!({"id": project_id, "status": "active"}).to_string())
 }
 
 #[tokio::main]

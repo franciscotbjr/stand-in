@@ -1,40 +1,28 @@
-//! Reference MCP server for testing and demonstrating stand-in.
+//! An MCP server demonstrating `#[mcp_resource]` — concrete and template resources.
 //!
-//! Run: `cargo run -p stand-in-reference`
+//! Run: `cargo run --example resource_server`
 //! Then send JSON-RPC over stdin:
 //!
 //! ```json
 //! {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"0.1.0"}}}
 //! {"jsonrpc":"2.0","method":"notifications/initialized"}
-//! {"jsonrpc":"2.0","id":2,"method":"tools/list"}
-//! {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"greet","arguments":{"name":"World"}}}
-//! {"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"add","arguments":{"a":2,"b":3}}}
-//! {"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"echo","arguments":{"message":"hello"}}}
+//! {"jsonrpc":"2.0","id":2,"method":"resources/list"}
+//! {"jsonrpc":"2.0","id":3,"method":"resources/templates/list"}
+//! {"jsonrpc":"2.0","id":4,"method":"resources/read","params":{"uri":"info://version"}}
+//! {"jsonrpc":"2.0","id":5,"method":"resources/read","params":{"uri":"docs://rust/readme"}}
+//! {"jsonrpc":"2.0","id":6,"method":"resources/read","params":{"uri":"config://settings"}}
+//! {"jsonrpc":"2.0","id":7,"method":"resources/subscribe","params":{"uri":"info://version"}}
+//! {"jsonrpc":"2.0","id":8,"method":"resources/unsubscribe","params":{"uri":"info://version"}}
 //! ```
 
 use stand_in::prelude::*;
 
-#[mcp_tool(name = "greet", description = "Greet someone by name")]
-async fn greet(name: String) -> Result<String> {
-    Ok(format!("Hello, {name}!"))
-}
-
-#[mcp_tool(name = "add", description = "Add two integers")]
-async fn add(a: i64, b: i64) -> Result<String> {
-    Ok(format!("{}", a + b))
-}
-
-#[mcp_tool(name = "echo", description = "Echo back a message")]
-async fn echo(message: String) -> Result<String> {
-    Ok(message)
-}
-
-// ----- Resources -----
+// ----- Concrete resource: returns server version info -----
 
 #[mcp_resource(
     uri = "info://version",
     name = "Server Version",
-    description = "Stand-in reference server version info",
+    description = "Stand-in resource server version info",
     mime_type = "application/json"
 )]
 async fn server_version() -> Result<String> {
@@ -44,6 +32,8 @@ async fn server_version() -> Result<String> {
     })
     .to_string())
 }
+
+// ----- Concrete resource: returns server settings -----
 
 #[mcp_resource(
     uri = "config://settings",
@@ -58,6 +48,8 @@ async fn server_settings() -> Result<String> {
     .to_string())
 }
 
+// ----- Template resource: documentation by topic -----
+
 #[mcp_resource(
     uri = "docs://{topic}/readme",
     name = "Documentation",
@@ -65,13 +57,13 @@ async fn server_settings() -> Result<String> {
     mime_type = "text/markdown"
 )]
 async fn docs_readme(topic: String) -> Result<String> {
-    Ok(format!("# {topic}\n\nDocumentation for {topic}."))
+    Ok(format!("# {topic}\n\nDocumentation for **{topic}**."))
 }
 
 #[mcp_server]
-struct ReferenceServer;
+struct ResourceServer;
 
 #[tokio::main]
 async fn main() {
-    ReferenceServer::serve(StdioTransport).await.unwrap();
+    ResourceServer::serve(StdioTransport).await.unwrap();
 }

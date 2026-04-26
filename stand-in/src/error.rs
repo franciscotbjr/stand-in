@@ -35,6 +35,10 @@ pub enum Error {
     /// Prompt execution error.
     #[error("Prompt error: {0}")]
     PromptError(String),
+
+    /// Resource read/execution error.
+    #[error("Resource error: {0}")]
+    ResourceError(String),
 }
 
 impl From<std::io::Error> for Error {

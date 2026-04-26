@@ -39,6 +39,26 @@ async fn write_greeting(name: String, style: Option<String>) -> Result<Prompt> {
     Ok(Prompt::user(text))
 }
 
+#[mcp_resource(
+    uri = "test://version",
+    name = "Version",
+    description = "Server version info",
+    mime_type = "application/json"
+)]
+async fn test_version() -> Result<String> {
+    Ok(serde_json::json!({"version": "0.0.4"}).to_string())
+}
+
+#[mcp_resource(
+    uri = "doc://{topic}/readme",
+    name = "Docs",
+    description = "Documentation for a topic",
+    mime_type = "text/markdown"
+)]
+async fn doc_readme(topic: String) -> Result<String> {
+    Ok(format!("# {topic}\n\nDocs for {topic}."))
+}
+
 #[mcp_server]
 struct TestHttpServer;
 
@@ -388,4 +408,103 @@ async fn test_prompts_get_unknown_returns_error() {
     let body: Value = resp.json().await.unwrap();
     assert!(body["error"].is_object());
     assert_eq!(body["error"]["code"], -32601);
+}
+
+// --- Resource tests ---
+
+#[tokio::test]
+async fn test_resources_list_http() {
+    let base_url = spawn_server().await;
+    let c = client();
+    let session_id = initialize(&c, &base_url).await;
+
+    let resp = c
+        .post(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .json(&json!({
+            "jsonrpc": "2.0",
+            "id": 7,
+            "method": "resources/list"
+        }))
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 200);
+    let body: Value = resp.json().await.unwrap();
+    let resources = body["result"]["resources"].as_array().unwrap();
+    assert_eq!(resources.len(), 1); // test://version is concrete
+    assert_eq!(resources[0]["uri"], "test://version");
+    assert_eq!(resources[0]["name"], "Version");
+    assert_eq!(resources[0]["mimeType"], "application/json");
+}
+
+#[tokio::test]
+async fn test_resources_read_http() {
+    let base_url = spawn_server().await;
+    let c = client();
+    let session_id = initialize(&c, &base_url).await;
+
+    let resp = c
+        .post(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .json(&json!({
+            "jsonrpc": "2.0",
+            "id": 8,
+            "method": "resources/read",
+            "params": { "uri": "test://version" }
+        }))
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 200);
+    let body: Value = resp.json().await.unwrap();
+    let contents = body["result"]["contents"].as_array().unwrap();
+    assert_eq!(contents.len(), 1);
+    assert_eq!(contents[0]["uri"], "test://version");
+    assert_eq!(contents[0]["mimeType"], "application/json");
+    assert!(contents[0]["text"].as_str().unwrap().contains("version"));
+}
+
+#[tokio::test]
+async fn test_resources_subscribe_notify_http() {
+    let base_url = spawn_server().await;
+    let c = client();
+    let session_id = initialize(&c, &base_url).await;
+
+    // Subscribe
+    let resp = c
+        .post(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .json(&json!({
+            "jsonrpc": "2.0",
+            "id": 9,
+            "method": "resources/subscribe",
+            "params": { "uri": "test://version" }
+        }))
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(resp.status(), 200);
+    let body: Value = resp.json().await.unwrap();
+    assert!(body["error"].is_null());
+
+    // Open SSE stream to receive notifications
+    let sse_resp = c
+        .get(format!("{base_url}/mcp"))
+        .header("mcp-session-id", &session_id)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(sse_resp.status(), 200);
+
+    // Verify the SSE content-type
+    let content_type = sse_resp
+        .headers()
+        .get("content-type")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    assert!(content_type.contains("text/event-stream"));
 }

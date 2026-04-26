@@ -84,12 +84,18 @@ fn expand_inner(attr: TokenStream, item: TokenStream) -> syn::Result<TokenStream
                     prompt_registry.register(factory.0());
                 }
 
+                let mut resource_registry = stand_in::resource::ResourceRegistry::new();
+
+                for factory in inventory::iter::<stand_in::resource::ResourceFactory> {
+                    resource_registry.register(factory.0());
+                }
+
                 let server_info = stand_in::server::ServerInfo {
                     name: env!("CARGO_PKG_NAME").to_string(),
                     version: env!("CARGO_PKG_VERSION").to_string(),
                 };
 
-                let handler = stand_in::server::RequestHandler::new(registry, prompt_registry, server_info);
+                let handler = stand_in::server::RequestHandler::new(registry, prompt_registry, resource_registry, server_info);
                 transport.run(handler).await
             }
 
