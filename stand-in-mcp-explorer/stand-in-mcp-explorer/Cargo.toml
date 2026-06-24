@@ -1,0 +1,39 @@
+[package]
+name = "stand-in-mcp-explorer"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95.0"
+publish = false
+description = "Native desktop MCP client — the MCP Explorer app (composes the 025 Design System)"
+
+[[bin]]
+name = "stand-in-mcp-explorer"
+path = "src/main.rs"
+
+[dependencies]
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui_platform = { git = "https://github.com/zed-industries/zed", features = ["font-kit"] }
+gpui-component = { git = "https://github.com/longbridge/gpui-component", rev = "70d2c44bd62ab16adf3cb791bf776e53d5ea312b" }
+gpui-component-assets = { git = "https://github.com/longbridge/gpui-component", rev = "70d2c44bd62ab16adf3cb791bf776e53d5ea312b" }
+stand-in-mcp-explorer-ds = { path = "../stand-in-mcp-explorer-ds" }
+stand-in = { path = "../../stand-in" }
+stand-in-client = { path = "../../stand-in-client", features = ["http", "oauth"] }
+directories = "5"
+keyring = "3"
+open = "5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sysinfo = { version = "0.33", optional = true }
+tokio = { version = "1", features = ["rt", "sync", "macros", "net", "time"] }
+
+[features]
+# Dev-only: list-rendering performance instrumentation (037 / O-024). Off by
+# default — the perf module, its hooks, the synthetic fixtures, and the `sysinfo`
+# dependency are absent from a normal build. Build with `--features perf` to
+# measure (see docs/perf-measurement.md).
+perf = ["dep:sysinfo"]
+
+[dev-dependencies]
+gpui = { git = "https://github.com/zed-industries/zed", features = ["test-support"] }
+axum = "0.8"
+tempfile = "3"

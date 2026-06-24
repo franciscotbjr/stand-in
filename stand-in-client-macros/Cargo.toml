@@ -1,0 +1,20 @@
+[package]
+name = "stand-in-client-macros"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+rust-version.workspace = true
+keywords = ["mcp", "ai", "llm", "agent", "client"]
+categories = ["development-tools::procedural-macro-helpers", "network-programming"]
+
+description = "Procedural macros for stand-in MCP client framework."
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn.workspace = true
+quote.workspace = true
+proc-macro2.workspace = true

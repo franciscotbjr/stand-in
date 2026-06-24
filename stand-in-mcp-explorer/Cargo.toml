@@ -1,0 +1,22 @@
+# stand-in-mcp-explorer — iteration 025 (Design System novo do zero, fiel ao canon).
+#
+# Standalone workspace so the large Zed/gpui git tree is fully detached from
+# the product workspace (no pollution of the product's Cargo.lock or build graph).
+# publish = false — the DS is consumed by the MCP Explorer app (iteration 026);
+# the gallery Storybook is a development tool only.
+#
+# gpui-component is pinned via rev (70d2c44b) in the member Cargo.toml files.
+# gpui / gpui_platform and all other zed crates are pinned via the committed Cargo.lock
+# (3f5705b98542) — NOT via manifest rev. Adding rev to the manifest creates a diamond
+# with gpui-component's own unpinned gpui dependency (Cargo treats `git+url?rev=X`
+# and `git+url` as separate sources even at the same commit SHA). The committed
+# lock file is the canonical pin for zed; cargo update must be deliberate and audited.
+[workspace]
+resolver = "2"
+members = ["stand-in-mcp-explorer-ds", "stand-in-mcp-explorer-gallery", "stand-in-mcp-explorer"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

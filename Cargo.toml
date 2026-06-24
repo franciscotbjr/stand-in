@@ -1,0 +1,82 @@
+[workspace]
+members = ["stand-in", "stand-in-macros", "stand-in-reference", "stand-in-client", "stand-in-client-macros"]
+# studio-gpui-spike (iteration 017) is a standalone crate with its own [workspace];
+# excluded here so the heavy Zed/gpui git tree never enters the product build graph.
+#
+# stand-in-mcp-studio / -ds (the egui Studio, iteration 013) are RETIRED: the project
+# moved to GPUI (017 verdict) and the build was reborn as iteration 020
+# (stand-in-mcp-explorer + -ds, their own excluded workspace). The egui crates are kept
+# on disk as a historical record but removed from the product build graph.
+# sync-crates (iteration 038) is the standalone Codeberg→GitHub mirror tool. It has
+# its own [workspace]; excluded here so it never enters the product build graph.
+exclude = ["studio-gpui-spike", "stand-in-mcp-studio", "stand-in-mcp-studio-ds", "sync-crates"]
+resolver = "2"
+
+[workspace.package]
+version = "0.0.4"
+edition = "2024"
+rust-version = "1.95.0"
+license = "MIT"
+repository = "https://github.com/franciscotbjr/stand-in"
+keywords = ["mcp", "ai", "llm", "agent", "server"]
+categories = ["web-programming::websocket", "web-programming::http-server", "artificial-intelligence"]
+exclude = [
+    ".claude/", 
+    ".github/", 
+    ".stateful-spec/", 
+    ".vscode/", 
+    "impl/", 
+    "AGENTS.md",
+    "ARCHITECTURE.md"
+    ]
+
+[workspace.dependencies]
+# Runtime
+tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal", "io-util", "io-std", "sync"] }
+tokio-stream = { version = "0.1.18", features = ["sync"] }
+
+# Serialization
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+base64 = "0.22"
+
+# Error handling
+thiserror = "2.0.18"
+
+# Async
+async-trait = "0.1.89"
+
+# Logging
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+
+# HTTP transport (feature-gated)
+axum = "0.8.9"
+tower-http = { version = "0.6.11", features = ["cors"] }
+uuid = { version = "1.23.2", features = ["v4"] }
+
+# Proc macro tooling
+syn = { version = "2.0.117", features = ["full", "parsing", "extra-traits"] }
+quote = "1.0.45"
+proc-macro2 = "1.0.106"
+
+# Tool discovery
+inventory = "0.3.24"
+
+# OAuth / crypto (feature-gated)
+sha2 = "0.10"
+rand = "0.9"
+
+# Testing
+reqwest = { version = "0.13.4", features = ["json", "stream"] }
+
+# Internal
+stand-in-macros = { path = "stand-in-macros", version = "0.0.4" }
+stand-in = { path = "stand-in", version = "0.0.4", default-features = false }
+stand-in-client-macros = { path = "stand-in-client-macros", version = "0.1.0" }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

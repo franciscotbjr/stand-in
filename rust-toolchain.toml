@@ -1,0 +1,11 @@
+# Single ruler for every agent (O-008, 5th review): rustfmt/clippy diverged between
+# the PM's and the engineer's machines, producing structural false-greens (025 M9 fmt
+# import order; M15 clippy lints). Pinning here makes `flow submit --gate` and the
+# PM's re-run certify against the SAME toolchain.
+#
+# This file lives at the REPO ROOT on purpose: rustup resolves it from the current
+# directory (not from --manifest-path), and the gate convention is "run from the
+# repo root" — a copy inside stand-in-mcp-explorer/ would never be picked up.
+[toolchain]
+channel = "1.95.0"
+components = ["rustfmt", "clippy"]

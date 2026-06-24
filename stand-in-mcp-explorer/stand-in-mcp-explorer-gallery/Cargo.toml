@@ -1,0 +1,21 @@
+[package]
+name = "stand-in-mcp-explorer-gallery"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95.0"
+publish = false
+description = "Storybook gallery for the MCP Explorer Design System — interactive browsing + capture gate"
+
+[[bin]]
+name = "stand-in-mcp-explorer-gallery"
+path = "src/main.rs"
+
+[dependencies]
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui_platform = { git = "https://github.com/zed-industries/zed", features = ["font-kit"] }
+gpui-component = { git = "https://github.com/longbridge/gpui-component", rev = "70d2c44bd62ab16adf3cb791bf776e53d5ea312b" }
+gpui-component-assets = { git = "https://github.com/longbridge/gpui-component", rev = "70d2c44bd62ab16adf3cb791bf776e53d5ea312b" }
+stand-in-mcp-explorer-ds = { path = "../stand-in-mcp-explorer-ds" }
+
+[dev-dependencies]
+gpui = { git = "https://github.com/zed-industries/zed", features = ["test-support"] }

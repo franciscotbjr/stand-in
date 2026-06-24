@@ -1,0 +1,61 @@
+[package]
+name = "stand-in-client"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+rust-version.workspace = true
+keywords = ["mcp", "ai", "llm", "agent", "client"]
+categories = ["network-programming", "web-programming::http-client", "asynchronous"]
+
+description = "MCP client SDK — connect, discover, and call MCP servers from Rust."
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+stand-in = { workspace = true, default-features = false }
+tokio = { workspace = true, features = ["process", "time"] }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+async-trait.workspace = true
+tracing.workspace = true
+
+# HTTP transport (optional)
+reqwest = { workspace = true, optional = true }
+tokio-stream = { workspace = true, optional = true }
+base64 = { workspace = true, optional = true }
+
+# OAuth (optional)
+sha2 = { workspace = true, optional = true }
+rand = { workspace = true, optional = true }
+
+# Macro layer (optional)
+stand-in-client-macros = { workspace = true, optional = true }
+
+[dev-dependencies]
+stand-in = { workspace = true, features = ["http"] }
+axum = { workspace = true }
+inventory = "0.3.24"
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+serde_json.workspace = true
+
+[[example]]
+name = "stdio_client"
+
+[[example]]
+name = "http_client"
+required-features = ["http"]
+
+[[example]]
+name = "typed_client"
+required-features = ["http"]
+
+[features]
+default = ["macros"]
+macros = ["dep:stand-in-client-macros"]
+http = ["dep:reqwest", "dep:tokio-stream", "dep:base64"]
+oauth = ["http", "dep:sha2", "dep:rand", "dep:base64", "tokio/net", "tokio/io-util"]
+

@@ -1,0 +1,21 @@
+[package]
+name = "stand-in-mcp-explorer-ds"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95.0"
+publish = false
+description = "Design System crate for the MCP Explorer — GPUI/gpui-component bootstrap + jandi tokens + themed components"
+
+[dependencies]
+gpui = { git = "https://github.com/zed-industries/zed" }
+gpui-component = { git = "https://github.com/longbridge/gpui-component", rev = "70d2c44bd62ab16adf3cb791bf776e53d5ea312b" }
+gpui-component-assets = { git = "https://github.com/longbridge/gpui-component", rev = "70d2c44bd62ab16adf3cb791bf776e53d5ea312b" }
+# Canonical source of the 8-step jandi ramp (same hexes as the prototype's
+# tokens/colors.css). no_std, zero transitive deps — no features enabled.
+jandi-colors = "0.1.0"
+
+[dev-dependencies]
+# test-support unlocks TestAppContext/VisualTestContext + debug_selector for the
+# headless geometry tests (tests/geometry.rs). It does NOT pull wayland/x11 on
+# Windows (those live behind gpui's default features, target-gated off Windows).
+gpui = { git = "https://github.com/zed-industries/zed", features = ["test-support"] }
