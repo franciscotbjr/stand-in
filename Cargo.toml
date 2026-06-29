@@ -23,6 +23,7 @@ categories = ["web-programming::websocket", "web-programming::http-server", "art
 exclude = [
     ".claude/", 
     ".github/", 
+    ".opencode/",
     ".stateful-spec/", 
     ".vscode/", 
     "impl/", 
@@ -52,20 +53,20 @@ tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 
 # HTTP transport (feature-gated)
 axum = "0.8.9"
-tower-http = { version = "0.6.11", features = ["cors"] }
-uuid = { version = "1.23.2", features = ["v4"] }
+tower-http = { version = "0.7.0", features = ["cors"] }
+uuid = { version = "1.23.4", features = ["v4"] }
 
 # Proc macro tooling
-syn = { version = "2.0.117", features = ["full", "parsing", "extra-traits"] }
-quote = "1.0.45"
+syn = { version = "2.0.118", features = ["full", "parsing", "extra-traits"] }
+quote = "1.0.46"
 proc-macro2 = "1.0.106"
 
 # Tool discovery
 inventory = "0.3.24"
 
 # OAuth / crypto (feature-gated)
-sha2 = "0.10"
-rand = "0.9"
+sha2 = "0.11"
+rand = "0.10.1"
 
 # Testing
 reqwest = { version = "0.13.4", features = ["json", "stream"] }
