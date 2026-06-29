@@ -1,0 +1,105 @@
+name: Publish (stand-in server pair)
+
+# Server release train: stand-in-macros + stand-in, versioned in lockstep
+# (version.workspace). Push a tag `si-v<version>` (e.g. si-v0.1.0) to publish.
+# The macro crate publishes first; stand-in then publishes against it (needs:).
+on:
+  push:
+    tags:
+      - 'si-v*'
+
+env:
+  CARGO_TERM_COLOR: always
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Generate Cargo.lock
+        run: cargo generate-lockfile
+
+      - name: cargo-audit cache restore
+        id: cargo_audit_cache_restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cargo/bin/cargo-audit
+          key: ${{ runner.os }}-cargo-audit
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+        if: steps.cargo_audit_cache_restore.outputs.cache-hit != 'true'
+
+      - name: cargo-audit cache save
+        uses: actions/cache/save@v4
+        if: always() && steps.cargo_audit_cache_restore.outputs.cache-hit != 'true'
+        with:
+          path: ~/.cargo/bin/cargo-audit
+          key: ${{ runner.os }}-cargo-audit
+
+      - uses: rustsec/audit-check@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    name: Test server pair (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Prepare symlink configuration
+        if: runner.os == 'Windows'
+        run: git config --global core.symlinks true
+
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: taiki-e/install-action@nextest
+
+      # Scoped to the server pair (-p) — not --workspace. The bump's interaction
+      # with stand-in-client is covered by the PR gate (build.yml) and by the
+      # client pair's own publish workflow.
+      - name: Test the server pair
+        run: cargo nextest run -p stand-in -p stand-in-macros --all-features
+
+  publish-macros:
+    name: Publish stand-in-macros
+    needs:
+      - audit
+      - test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+
+      # cargo publish verifies (no --no-verify) and waits for the crate to land
+      # in the registry index before returning, so the dependent job below can
+      # resolve stand-in-macros from crates.io.
+      - name: Publish stand-in-macros to crates.io
+        run: cargo publish -p stand-in-macros
+
+  publish-standin:
+    name: Publish stand-in
+    needs:
+      - publish-macros
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+
+      # Resolves stand-in-macros 0.1.0 from crates.io (published by the prior
+      # job). --all-features verifies the http transport compiles too.
+      - name: Publish stand-in to crates.io
+        run: cargo publish -p stand-in --all-features

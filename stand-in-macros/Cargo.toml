@@ -9,7 +9,7 @@ keywords.workspace = true
 categories.workspace = true
 
 description = "Procedural macros for stand-in MCP server framework."
-readme = "../README.md"
+readme = "README.md"
 
 [lib]
 proc-macro = true

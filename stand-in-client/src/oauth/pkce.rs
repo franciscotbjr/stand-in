@@ -1,7 +1,7 @@
 //! PKCE (Proof Key for Code Exchange) — RFC 7636 §4.
 
 use base64::Engine;
-use rand::Rng;
+use rand::RngExt;
 use sha2::{Digest, Sha256};
 
 /// PKCE parameters: a random code verifier and its S256 challenge.
