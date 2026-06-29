@@ -9,7 +9,7 @@ keywords.workspace = true
 categories.workspace = true
 
 description = "A stand-in for your MCP server boilerplate."
-readme = "../README.md"
+readme = "README.md"
 
 [dependencies]
 stand-in-macros.workspace = true
