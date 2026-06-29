@@ -74,7 +74,7 @@ reqwest = { version = "0.13.4", features = ["json", "stream"] }
 # Internal
 stand-in-macros = { path = "stand-in-macros", version = "0.1.0" }
 stand-in = { path = "stand-in", version = "0.1.0", default-features = false }
-stand-in-client-macros = { path = "stand-in-client-macros", version = "0.1.0" }
+stand-in-client-macros = { path = "stand-in-client-macros", version = "0.2.0" }
 
 [profile.release]
 opt-level = 3

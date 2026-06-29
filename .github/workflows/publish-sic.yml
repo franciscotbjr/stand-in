@@ -1,0 +1,108 @@
+name: Publish (stand-in client pair)
+
+# Client release train: stand-in-client-macros + stand-in-client, released as a pair
+# on independent (literal) versions. Push a tag `sic-v<version>` (e.g. sic-v0.2.0) to
+# publish. The macro crate publishes first; stand-in-client then publishes against it
+# (needs:). The client depends on stand-in (the server lib), which must already be live
+# on crates.io.
+on:
+  push:
+    tags:
+      - 'sic-v*'
+
+env:
+  CARGO_TERM_COLOR: always
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Generate Cargo.lock
+        run: cargo generate-lockfile
+
+      - name: cargo-audit cache restore
+        id: cargo_audit_cache_restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cargo/bin/cargo-audit
+          key: ${{ runner.os }}-cargo-audit
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+        if: steps.cargo_audit_cache_restore.outputs.cache-hit != 'true'
+
+      - name: cargo-audit cache save
+        uses: actions/cache/save@v4
+        if: always() && steps.cargo_audit_cache_restore.outputs.cache-hit != 'true'
+        with:
+          path: ~/.cargo/bin/cargo-audit
+          key: ${{ runner.os }}-cargo-audit
+
+      - uses: rustsec/audit-check@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    name: Test client pair (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Prepare symlink configuration
+        if: runner.os == 'Windows'
+        run: git config --global core.symlinks true
+
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: taiki-e/install-action@nextest
+
+      # Scoped to the client pair (-p) — not --workspace. --all-features exercises
+      # the macros, http, and oauth features. The bump's interaction with the rest of
+      # the workspace is covered by the PR gate (build.yml).
+      - name: Test the client pair
+        run: cargo nextest run -p stand-in-client -p stand-in-client-macros --all-features
+
+  publish-client-macros:
+    name: Publish stand-in-client-macros
+    needs:
+      - audit
+      - test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+
+      # cargo publish verifies (no --no-verify) and waits for the crate to land in the
+      # registry index before returning, so the dependent job below can resolve
+      # stand-in-client-macros from crates.io.
+      - name: Publish stand-in-client-macros to crates.io
+        run: cargo publish -p stand-in-client-macros
+
+  publish-client:
+    name: Publish stand-in-client
+    needs:
+      - publish-client-macros
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+
+      # Resolves stand-in-client-macros 0.2.0 (published by the prior job) and
+      # stand-in 0.1.0 (already live) from crates.io. --all-features verifies the http
+      # and oauth transports compile too.
+      - name: Publish stand-in-client to crates.io
+        run: cargo publish -p stand-in-client --all-features

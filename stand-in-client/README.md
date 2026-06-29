@@ -12,7 +12,7 @@ Part of the [stand-in](https://crates.io/crates/stand-in) ecosystem (which provi
 
 ```toml
 [dependencies]
-stand-in-client = "0.1.0"
+stand-in-client = "0.2.0"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 ```
 
@@ -22,10 +22,11 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 |----------|---------|-------------|
 | `macros` | Yes     | `#[mcp_client]` proc macro for typed stubs |
 | `http`   | No      | Streamable HTTP transport (`reqwest`-based) |
+| `oauth`  | No      | OAuth 2.0 (Authorization Code + PKCE S256) for HTTP servers — implies `http` |
 
 Enable HTTP:
 ```toml
-stand-in-client = { version = "0.1.0", features = ["http"] }
+stand-in-client = { version = "0.2.0", features = ["http"] }
 ```
 
 ## Quick Start — Dynamic API
