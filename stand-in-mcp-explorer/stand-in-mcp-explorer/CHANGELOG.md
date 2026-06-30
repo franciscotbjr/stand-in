@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-30
+
+Primeira release pública distribuída do `stand-in-mcp-explorer` (binários por
+plataforma anexados a um GitHub Release — matriz 4-OS incl. Apple Silicon, via
+tag `sime-v*`). Consolida todo o trabalho desde o rebuild sobre o Design System
+da 025 (028) até a instrumentação de performance (037).
+
 ### Added (037 — Instrumentação de performance das listas)
 
 Harness de medição de performance das listas para diagnosticar a "rolagem dura"

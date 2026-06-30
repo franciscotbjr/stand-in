@@ -1,33 +1,110 @@
-name: Binaries
+name: Release Explorer Binaries
 
+# Builds the stand-in-mcp-explorer app for the 4 supported targets and attaches
+# per-target archives (+ SHA256) to a GitHub Release. Trilho B do O-029.
+#
+# Trigger: push a `sime-v*` tag (the human pushes the mirror snapshot + tag), or
+# run manually via workflow_dispatch (fallback). The old push-to-main trigger is
+# gone — it rebuilt 4 OSes on every mirror sync for an ephemeral artifact.
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, e.g. 0.1.0 (tag will be sime-v<version>)'
+        required: true
+        type: string
   push:
-    paths: ['stand-in-mcp-explorer/**', 'stand-in-client/**', 'stand-in-client-macros/**', 'stand-in/**', 'stand-in-macros/**', '.github/workflows/binaries.yml']
-    branches: ['main']
-    tags: ['v*']
+    tags: ['sime-v*']
+
+permissions:
+  contents: write # create the Release + upload assets
 
 env:
   CARGO_TERM_COLOR: always
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  build-explorer:
-    name: Build MCP Explorer (${{ matrix.os }})
+  setup:
+    name: Resolve version + create release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Resolve version + tag
+        id: v
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            TAG="${GITHUB_REF_NAME}"
+            VERSION="${TAG#sime-v}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            TAG="sime-v${VERSION}"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Releasing ${VERSION} (tag ${TAG})"
+
+      - name: Extract CHANGELOG section
+        id: notes
+        shell: bash
+        run: |
+          CHANGELOG="stand-in-mcp-explorer/stand-in-mcp-explorer/CHANGELOG.md"
+          VERSION="${{ steps.v.outputs.version }}"
+          # Print the body under "## [VERSION]" up to (but not including) the next "## [" heading.
+          awk -v target="## [${VERSION}]" '
+            /^## \[/ {
+              if (found) { exit }
+              if (index($0, target) == 1) { found = 1; next }
+            }
+            found { print }
+          ' "$CHANGELOG" > release-notes.md
+          if [[ ! -s release-notes.md ]]; then
+            echo "::error::No '## [${VERSION}]' section found in ${CHANGELOG}" >&2
+            exit 1
+          fi
+          echo "----- release notes -----"
+          cat release-notes.md
+
+      - name: Create or update the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.v.outputs.tag }}"
+          TITLE="MCP Explorer ${{ steps.v.outputs.version }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "$TITLE" --notes-file release-notes.md
+          else
+            gh release create "$TAG" --title "$TITLE" --notes-file release-notes.md
+          fi
+
+  build:
+    name: Build + package (${{ matrix.target }})
+    needs: setup
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact: stand-in-mcp-explorer
+            bin: stand-in-mcp-explorer
+            archive: tar.gz
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            bin: stand-in-mcp-explorer
+            archive: tar.gz
           - os: macos-latest
             target: x86_64-apple-darwin
-            artifact: stand-in-mcp-explorer
+            bin: stand-in-mcp-explorer
+            archive: tar.gz
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact: stand-in-mcp-explorer.exe
+            bin: stand-in-mcp-explorer.exe
+            archive: zip
 
     steps:
       - uses: actions/checkout@v6
@@ -45,9 +122,39 @@ jobs:
       - name: Build release
         run: cargo build --manifest-path stand-in-mcp-explorer/Cargo.toml --release --target ${{ matrix.target }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v5
+      - name: Package archive + checksum
+        id: pkg
+        shell: bash
+        run: |
+          VERSION="${{ needs.setup.outputs.version }}"
+          TARGET="${{ matrix.target }}"
+          NAME="stand-in-mcp-explorer-${VERSION}-${TARGET}"
+          BIN="stand-in-mcp-explorer/target/${TARGET}/release/${{ matrix.bin }}"
+          mkdir -p "stage/${NAME}"
+          cp "$BIN" "stage/${NAME}/"
+          cp stand-in-mcp-explorer/stand-in-mcp-explorer/README.md "stage/${NAME}/"
+          cp stand-in-mcp-explorer/stand-in-mcp-explorer/CHANGELOG.md "stage/${NAME}/"
+          cp LICENSE "stage/${NAME}/"
+          cd stage
+          if [[ "${{ matrix.archive }}" == "zip" ]]; then
+            FILE="${NAME}.zip"
+            7z a "$FILE" "${NAME}" >/dev/null
+          else
+            FILE="${NAME}.tar.gz"
+            tar -czf "$FILE" "${NAME}"
+          fi
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "$FILE" > "${FILE}.sha256"
+          else
+            shasum -a 256 "$FILE" > "${FILE}.sha256"
+          fi
+          echo "glob=stage/${NAME}.*" >> "$GITHUB_OUTPUT"
+
+      - name: Upload archive + checksum to the release
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: ${{ matrix.artifact }}-${{ matrix.target }}
-          path: stand-in-mcp-explorer/target/${{ matrix.target }}/release/${{ matrix.artifact }}
-          if-no-files-found: error
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.pkg.outputs.glob }}
+          file_glob: true
+          tag: ${{ needs.setup.outputs.tag }}
+          overwrite: true
