@@ -97,7 +97,7 @@ jobs:
             target: aarch64-apple-darwin
             bin: stand-in-mcp-explorer
             archive: tar.gz
-          - os: macos-latest
+          - os: macos-13 # Intel runner — native x86_64 build (no cross-compile)
             target: x86_64-apple-darwin
             bin: stand-in-mcp-explorer
             archive: tar.gz
@@ -109,7 +109,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: dtolnay/rust-toolchain@stable
+      # Pin to the repo's rust-toolchain.toml channel so the toolchain that installs
+      # the target is the same one cargo builds with (each runner builds natively).
+      - uses: dtolnay/rust-toolchain@1.95.0
         with:
           targets: ${{ matrix.target }}
 
