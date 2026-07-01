@@ -38,12 +38,15 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            TAG="${GITHUB_REF_NAME}"
-            VERSION="${TAG#sime-v}"
+            RAW="${GITHUB_REF_NAME}"
           else
-            VERSION="${{ github.event.inputs.version }}"
-            TAG="sime-v${VERSION}"
+            RAW="${{ github.event.inputs.version }}"
           fi
+          # Normalize to a bare semver: tolerate an optional leading sime-v / v
+          # prefix (e.g. a tag name typed into the dispatch input).
+          VERSION="${RAW#sime-v}"
+          VERSION="${VERSION#v}"
+          TAG="sime-v${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "Releasing ${VERSION} (tag ${TAG})"
